@@ -805,7 +805,7 @@
         const saveScore = () => {
             if (auth.currentUser) {
                 db.collection("users").doc(auth.currentUser.uid).set({
-                    gtaScore: GTAClickerState.score
+                    score: GTAClickerState.score
                 }).then(() => {
                     console.log("Score saved successfully!");
                 }).catch((error) => {
@@ -819,9 +819,9 @@
             if (auth.currentUser) {
                 db.collection("users").doc(auth.currentUser.uid).get()
                     .then((doc) => {
-                        if (doc.exists && doc.data().gtaScore !== undefined) {
-                            GTAClickerState.setScore(doc.data().gtaScore);
-                            console.log("Score loaded successfully:", doc.data().gtaScore);
+                        if (doc.exists && doc.data().score !== undefined) {
+                            GTAClickerState.setScore(doc.data().score);
+                            console.log("Score loaded successfully:", doc.data().score);
                         } else {
                             console.log("No score found, setting to 0");
                             GTAClickerState.setScore(0);
