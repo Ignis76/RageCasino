@@ -94,7 +94,7 @@
             transform: scale(1.1);
         }
 
-        /* Style for the GTA-style clicker menu - **REPLACED ENTIRE SECTION** */
+        /* Style for the GTA-style clicker menu */
         .clicker-menu {
             position: fixed;
             bottom: 80px;
@@ -571,40 +571,12 @@
                 </div>
             </div>
         </footer>
-        <button class="floating-button" onclick="toggleClickerMenu()" title="Открыть кликер">
-            <i class="fas fa-gamepad"></i>
-        </button>
 
-        <!-- Clicker Menu - **REPLACED ENTIRE SECTION** -->
-        <div id="clickerMenu" class="clicker-menu">
-            <h2 style="text-align: center; color: #ffd700; margin-bottom: 15px;">RESPECT+</h2>
-            <div id="score">0</div>
+        <!-- ===================== This is where the React component will be rendered ===================== -->
+        <div id="react-clicker-container"></div>
+        <!-- ============================================================================================ -->
 
-            <div class="progress-bar">
-                <div id="progressFill" class="progress-fill" style="width: 0%"></div>
-            </div>
-
-            <button id="clickButton" class="clicker-button">
-                EARN RESPECT
-            </button>
-
-            <div class="status-text">
-                MISSION: Earn respect in Los Santos
-            </div>
-
-            <div class="stats-section">
-                <div class="stat-row">
-                    <span>RESPECT LEVEL</span>
-                    <span id="respectLevel" class="stat-value">0</span>
-                </div>
-                <div class="stat-row">
-                    <span>STATUS</span>
-                    <span id="playerStatus" class="stat-value">ROOKIE</span>
-                </div>
-            </div>
-        </div>
     </div>
-
 
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
@@ -617,8 +589,150 @@
     <script src="js/aos.js"></script>
 
     <script src="js/main.js"></script>
+
+    <!-- React and Babel Libraries -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script type="text/babel">
+        // React Component
+        const GTAClicker = () => {
+            const [score, setScore] = React.useState(0);
+            const [showMenu, setShowMenu] = React.useState(false);
+            const [notifications, setNotifications] = React.useState([]);
+            const [notificationCount, setNotificationCount] = React.useState(0);
+
+            const handleClick = () => {
+                setScore(prev => prev + 1);
+                createNotification();
+            };
+
+            const createNotification = () => {
+                const id = notificationCount;
+                setNotificationCount(prev => prev + 1);
+
+                const newNotification = {
+                    id,
+                    offsetX: Math.random() * 40 - 20,
+                    offsetY: Math.random() * 20 - 10,
+                };
+
+                setNotifications(prev => [...prev, newNotification]);
+
+                setTimeout(() => {
+                    setNotifications(prev => prev.filter(notification => notification.id !== id));
+                }, 1000);
+            };
+
+            return (
+                <div className="fixed bottom-20 right-4 flex flex-col items-end">
+                    {/* Floating Button */}
+                     <button 
+                        onClick={() => setShowMenu(!showMenu)}
+                        className="floating-button" title="Открыть кликер"
+                    >
+                        <i className="fas fa-gamepad"></i>
+                    </button>
+
+                    {/* Main Clicker Menu */}
+                    {showMenu && (
+                        <div className="w-80 bg-black bg-opacity-90 rounded-lg p-6 border-2 border-yellow-500 shadow-2xl transform transition-all duration-300">
+                            {/* Header */}
+                            <div className="text-center mb-6">
+                                <h2 className="text-yellow-500 text-2xl font-bold mb-2">RESPECT+</h2>
+                                <div className="text-white text-4xl font-bold mb-4"
+                                    style={{ fontFamily: 'Arial Black' }}>
+                                    {score}
+                                </div>
+                            </div>
+
+                            {/* Score Bar */}
+                            <div className="bg-gray-800 h-4 rounded-full mb-6 overflow-hidden">
+                                <div
+                                    className="bg-gradient-to-r from-yellow-500 to-yellow-300 h-full transition-all duration-300"
+                                    style={{ width: `${Math.min((score / 100) * 100, 100)}%` }}
+                                />
+                            </div>
+
+                            {/* Click Button */}
+                            <button
+                                onClick={handleClick}
+                                className="w-full bg-gradient-to-r from-yellow-600 to-yellow-400 text-black font-bold py-4 rounded-lg hover:from-yellow-500 hover:to-yellow-300 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg"
+                            >
+                                EARN RESPECT
+                            </button>
+
+                            {/* Mission Text */}
+                            <div className="mt-4 text-gray-400 text-sm text-center">
+                                MISSION: Earn respect in Los Santos
+                            </div>
+
+                            {/* Stats */}
+                            <div className="mt-4 border-t border-gray-700 pt-4">
+                                <div className="text-gray-400 text-sm">
+                                    <div className="flex justify-between mb-2">
+                                        <span>RESPECT LEVEL</span>
+                                        <span className="text-yellow-500">{Math.floor(score / 10)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>STATUS</span>
+                                        <span className="text-yellow-500">
+                                            {score < 10 ? 'ROOKIE' : score < 50 ? 'THUG' : 'KINGPIN'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Floating Notifications Container */}
+                            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                                {notifications.map(notification => (
+                                    <div
+                                        key={notification.id}
+                                        className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-respect-float"
+                                        style={{
+                                            transform: `translate(calc(-50% + ${notification.offsetX}px), calc(-50% + ${notification.offsetY}px))`,
+                                        }}
+                                    >
+                                        <div className="text-yellow-500 text-3xl font-bold whitespace-nowrap"
+                                            style={{
+                                                textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+                                                animation: 'respectFloat 1s ease-out forwards'
+                                            }}>
+                                            +RESPECT
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    <style jsx>{`
+                        @keyframes respectFloat {
+                            0% {
+                                opacity: 1;
+                                transform: translateY(0);
+                            }
+                            100% {
+                                opacity: 0;
+                                transform: translateY(-100px);
+                            }
+                        }
+                        .animate-respect-float {
+                            animation: respectFloat 1s ease-out forwards;
+                        }
+                    `}</style>
+                </div>
+            );
+        };
+
+        // Render React Component
+        ReactDOM.render(<GTAClicker />, document.getElementById('react-clicker-container'));
+
+    </script>
+
     <script>
-        // Your existing Firebase configuration
+        // Firebase Configuration (unchanged)
         const firebaseConfig = {
             apiKey: "AIzaSyDaPh4tOyy8Q1QmYRf3WQBMwAOcyNCyGAA",
             authDomain: "robotek-rage.firebaseapp.com",
@@ -629,146 +743,36 @@
             measurementId: "G-KC22XB38KW"
         };
 
-        // Initialize Firebase
-        let app;
-        try {
-            app = firebase.initializeApp(firebaseConfig);
-        } catch (error) {
-            console.error("Firebase initialization error:", error);
-        }
-
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        let score = 0;
-        let isLoggedIn = false;
-        let lastClickTime = 0;
-        const clickDelay = 200;
-
-        // Update UI elements - **REPLACED ENTIRE SECTION**
-        const scoreDisplay = document.getElementById("score");
-        const progressFill = document.getElementById("progressFill");
-        const respectLevel = document.getElementById("respectLevel");
-        const playerStatus = document.getElementById("playerStatus");
-        const clickerMenu = document.getElementById("clickerMenu");
-        const clickButton = document.getElementById("clickButton");
-        const floatingButton = document.querySelector(".floating-button"); // Make sure this is defined
-
-        function updateUI() {
-            scoreDisplay.textContent = score;
-            progressFill.style.width = `${Math.min((score % 100), 100)}%`;
-            respectLevel.textContent = Math.floor(score / 10);
-
-            // Update player status
-            if (score < 10) {
-                playerStatus.textContent = 'ROOKIE';
-            } else if (score < 50) {
-                playerStatus.textContent = 'THUG';
-            } else {
-                playerStatus.textContent = 'KINGPIN';
-            }
-        }
-
-        function createRespectNotification() {
-            const notification = document.createElement('div');
-            notification.className = 'respect-notification';
-            notification.textContent = '+RESPECT';
-
-            // Random position offset
-            const offsetX = Math.random() * 40 - 20;
-            const offsetY = Math.random() * 20 - 10;
-
-            notification.style.left = `calc(50% + ${offsetX}px)`;
-            notification.style.top = `calc(50% + ${offsetY}px)`;
-
-            clickerMenu.appendChild(notification);
-
-            // Remove notification after animation
-            setTimeout(() => {
-                notification.remove();
-            }, 1000);
-        }
-
-        function toggleClickerMenu() {
-            clickerMenu.style.display = clickerMenu.style.display === "none" ? "block" : "none";
-        }
-
-        function addPoint() {
-            if (!isLoggedIn) {
-                alert("Пожалуйста, войдите в аккаунт, чтобы кликать!");
-                return;
-            }
-
-            const now = Date.now();
-            if (now - lastClickTime > clickDelay) {
-                score++;
-                updateUI();
-                createRespectNotification();
-                saveData();
-                lastClickTime = now;
-            }
-        }
-
-        function saveData() {
-            if (!isLoggedIn) return;
-            db.collection("users").doc(auth.currentUser.uid).set({
-                    score: score
-                })
-                .then(() => console.log("Data saved successfully!"))
-                .catch((error) => console.error("Error saving data:", error));
-        }
-
-        function loadData() {
-            if (!isLoggedIn) {
-                score = 0;
-                updateUI();
-                return;
-            }
-            db.collection("users").doc(auth.currentUser.uid).get()
-                .then((doc) => {
-                    if (doc.exists) {
-                        score = doc.data().score || 0;
-                        updateUI();
-                    } else {
-                        score = 0;
-                        updateUI();
-                        saveData();
-                    }
-                })
-                .catch((error) => console.error("Error loading data:", error));
-        }
-
-        // Event listeners - **SLIGHTLY MODIFIED**
-        clickButton.addEventListener('click', addPoint);
-
-        // Firebase auth state observer
-        auth.onAuthStateChanged((user) => {
-            isLoggedIn = !!user;
-            updateSignInButton(user);
-            if (user) {
-                loadData();
-            }
-        });
-
-        // Close clicker menu on outside click - **SLIGHTLY MODIFIED**
-        document.addEventListener('click', function(event) {
-            const isClickInsideMenu = clickerMenu.contains(event.target) ||
-                event.target.classList.contains('floating-button');
-            if (!isClickInsideMenu && clickerMenu.style.display === 'block') {
-                clickerMenu.style.display = 'none';
-            }
-        });
-
-        // Sign-in function - Your existing sign-in button logic remains the same - NO CHANGES NEEDED
-        const signInButton = document.getElementById('signInButton'); // get sign-in button
-
-        function checkFirebaseConfiguration() {  // Checks API key is valid
+        function checkFirebaseConfiguration() {
             if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "YOUR_API_KEY") {
-                console.error("Firebase configuration is missing.  Please ensure you have populated the firebaseConfig object with your project's credentials.");
+                console.error(
+                    "Firebase configuration is missing.  Please ensure you have populated the firebaseConfig object with your project's credentials.");
                 alert("Firebase Configuration Missing, please check the console for more information.");
                 return false;
             }
             return true;
         }
+
+        let app;
+        try {
+            app = firebase.initializeApp(firebaseConfig);
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+            alert("Firebase initialization error: " + error.message);
+        }
+
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const signInButton = document.getElementById('signInButton');
+        const floatingButton = document.querySelector(".floating-button");
+           let score = 0;
+            const scoreDisplay = document.getElementById("score");
+            const clickerMenu = document.getElementById("clickerMenu");
+         const clickerDescription = document.getElementById("clickerDescription");
+           let lastClickTime = 0;
+           const clickDelay = 200;
+           let isLoggedIn = false; // Track login status
+
         // Function to update UI based on authentication state
         function updateSignInButton(user) {
             const button = document.getElementById('signInButton');
@@ -782,51 +786,130 @@
             }
             floatingButton.style.display = 'flex'; // Always show the button
         }
+
+        // Check current auth state
+        auth.onAuthStateChanged((user) => {
+            updateSignInButton(user);
+            if (user) {
+                loadData();
+            }
+        });
+
+
+        // Sign-in function
         signInButton.addEventListener('click', function() {
             if (!checkFirebaseConfiguration()) return;
             if (auth.currentUser) {
                 // Sign out
-                auth.signOut()
+                 auth.signOut()
                     .then(() => {
                         console.log('User signed out');
-                        //  alert('You have been signed out.'); // Removed the alert
+                       //  alert('You have been signed out.'); // Removed the alert
                         updateSignInButton(null);
-                    })
-                    .catch((error) => {
-                        console.error('Sign-out error:', error);
-                        let errorMessage = "Sign-out failed.";
-                        alert(errorMessage);
-                    });
-            } else {
-                // Sign in
+                        resetClicker();
+                   })
+                .catch((error) => {
+                    console.error('Sign-out error:', error);
+                    let errorMessage = "Sign-out failed.";
+                         alert(errorMessage);
+                   });
+             } else {
+                    // Sign in
                 const provider = new firebase.auth.GoogleAuthProvider();
-                provider.setCustomParameters({
-                    prompt: 'select_account' // Force account selection
-                });
-                auth.signInWithPopup(provider)
-                    .then((result) => {
+                    provider.setCustomParameters({
+                         prompt: 'select_account' // Force account selection
+                     });
+                 auth.signInWithPopup(provider)
+                     .then(() => {
                         // User is signed in
-                        const user = result.user;
-                        console.log("User signed in:", user);
-                        // alert(`Welcome, ${user.displayName}!`); // Removed the alert
-                        updateSignInButton(user);
-                         loadData();
+                      const user = auth.currentUser;
+                      console.log("User signed in:", user);
+                     // alert(`Welcome, ${user.displayName}!`); // Removed the alert
+                      updateSignInButton(user);
+                           // Load data
+                           loadData();
                     })
-                    .catch((error) => {
+                .catch((error) => {
                         let errorMessage = "Sign-in failed.";
-                        if (error.code === 'auth/popup-closed-by-user') {
+                       if (error.code === 'auth/popup-closed-by-user') {
                             errorMessage = "Sign-in popup was closed.";
                         } else if (error.code === 'auth/unauthorized-domain') {
-                            errorMessage = "This domain is not authorized.  Please authorize it in the Firebase console.";
-                        }
+                             errorMessage = "This domain is not authorized.  Please authorize it in the Firebase console.";
+                       }
                         alert(errorMessage);
-                        console.error("Sign-in error:", error);
+                    console.error("Sign-in error:", error);
                         alert("Sign-in failed: " + error.message);
-                    });
+                     });
             }
         });
-    </script>
+ // Clicker Game Logic
+    const clickButton = document.getElementById("clickButton");
 
+       clickButton.addEventListener('click', addPoint); // Attach the click event to clickButton
+
+        function toggleClickerMenu() {
+             clickerMenu.style.display = clickerMenu.style.display === "none" ? "block" : "none";
+        }
+
+     function resetClicker() {
+            score = 0;
+           updateScore();
+            saveData();
+       }
+  function addPoint() {
+      if (!isLoggedIn) {
+            alert("Пожалуйста, войдите в аккаунт, чтобы кликать!");
+            return;
+        }
+
+        const now = Date.now();
+        if (now - lastClickTime > clickDelay) {
+            score++;
+            updateScore();
+            saveData();
+            lastClickTime = now;
+        }
+    }
+
+        function updateScore() {
+          scoreDisplay.textContent = `Score: ${score}`;
+      }
+         //Function to save data to firestore
+   function saveData() {
+            if (!isLoggedIn) return;
+            db.collection("users").doc(auth.currentUser.uid).set({
+                 score: score
+            })
+         .then(() => console.log("Data saved successfully!"))
+             .catch((error) => console.error("Error saving data:", error));
+        }
+    function loadData() {
+        if (!isLoggedIn) {
+             resetClicker();
+                return;
+          }
+           db.collection("users").doc(auth.currentUser.uid).get()
+                .then((doc) => {
+                   if (doc.exists) {
+                        score = doc.data().score || 0;
+                       updateScore();
+                         console.log("Data loaded successfully:", score);
+                   } else {
+                      console.log("No data found, setting to 0");
+                      resetClicker();
+                        saveData();
+                   }
+           })
+           .catch((error) => console.error("Error loading data:", error));
+    }
+     // Close clicker menu on outside click
+        document.addEventListener('click', function(event) {
+            const isClickInsideMenu = clickerMenu.contains(event.target) || floatingButton.contains(event.target);
+            if (!isClickInsideMenu && clickerMenu.style.display === 'block') {
+                clickerMenu.style.display = 'none';
+            }
+        });
+  </script>
 </body>
 
 </html>
