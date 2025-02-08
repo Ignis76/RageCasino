@@ -167,9 +167,12 @@
 
         /* Casino Link Style */
         .casino-link {
-            color: #ff0; /* яркий цвет, например, желтый */
-            text-decoration: underline; /* подчеркивание для узнаваемости */
-            font-weight: bold; /* жирный шрифт для привлечения внимания */
+            color: #ff0;
+            /* яркий цвет, например, желтый */
+            text-decoration: underline;
+            /* подчеркивание для узнаваемости */
+            font-weight: bold;
+            /* жирный шрифт для привлечения внимания */
         }
     </style>
 
@@ -531,7 +534,6 @@
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/jquery.sticky.js"></script>
     <script src="js/jquery.waypoints.min.js"></script>
-    <script src="js/jquery.animateNumber.min.js"></script>
     <script src="js/jquery.fancybox.min.js"></script>
     <script src="js/jquery.easing.1.3.js"></script>
     <script src="js/aos.js"></script>
@@ -574,7 +576,7 @@
                 saveScore(); // Save score to Firestore after updating it
                 renderGTAClicker(); // Re-render the GTAClicker after updating score
             },
-            showMenu: true,
+            showMenu: false,  // Initialize with menu closed!
             setShowMenu: (newShowMenu) => {
                 GTAClickerState.showMenu = newShowMenu;
                 renderGTAClicker();
@@ -662,7 +664,7 @@
 
                         /* Score Bar */
                         React.createElement('div', {
-                                className: "bg-gray-800 h-4 rounded-full mb-6 overflow-hidden"
+                               className: "bg-gray-800 h-4 rounded-full mb-6 overflow-hidden"
                             },
                             React.createElement('div', {
                                 className: "bg-gradient-to-r from-yellow-500 to-yellow-300 h-full transition-all duration-300",
@@ -731,24 +733,24 @@
                                 }, React.createElement('div', {
                                     className: "text-yellow-500 text-3xl font-bold whitespace-nowrap",
                                     style: {
-                                        textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-                                        animation: 'respectFloat 1s ease-out forwards'
+                                        textShadow: '2px 2px 4px rgba(0,0,0,0.5)',                                        animation: 'respectFloat 1s ease-out forwards'
                                     }
                                 }, "+RESPECT"))
                             )
                         ),
-                      showCasinoLink && React.createElement('div', {
-                                className: "text-center mt-4"
-                            },
-                            React.createElement('p', {className: "text-white"}, "Достигнут высокий уровень!"),
-                            React.createElement('a', {
-                                className: "casino-link",
-                                href: "https://www.example.com/casino", // Замените на реальную ссылку
-                                target: "_blank", // Открывать в новой вкладке
-                                rel: "noopener noreferrer" // Для безопасности
-                            }, "Попробуйте удачу в казино!")
-                      )
-                    )
+                        showCasinoLink && React.createElement('div', {
+                            className: "text-center mt-4"
+                        },
+                        React.createElement('p', {
+                            className: "text-white"
+                        }, "Достигнут высокий уровень!"),
+                        React.createElement('a', {
+                            className: "casino-link",
+                            href: "https://www.example.com/casino", // Замените на реальную ссылку
+                            target: "_blank", // Открывать в новой вкладке
+                            rel: "noopener noreferrer" // Для безопасности
+                        }, "Попробуйте удачу в казино!")
+                    ))
                 );
         };
 
@@ -765,12 +767,24 @@
                 button.innerHTML = `<i class="fab fa-google" style="color:white"></i> Войти`;
                 button.title = "Войти";
             }
-             const floatingButton = document.querySelector(".floating-button");
-            const clickerMenu = document.querySelector(".clicker-menu");
-            if (!floatingButton || !clickerMenu) return; // Exit early if the buttons dont exist
+        };
 
-            floatingButton.style.display = 'flex'; // Always show the button
-            floatingButton.addEventListener("click", toggleMenu);
+          // Function to setup floating button toggle events
+        const setupFloatingButton = () => {
+            const floatingButton = document.querySelector(".floating-button");
+
+            if (floatingButton) {
+                floatingButton.addEventListener("click", toggleMenu);
+            } else {
+                // If the button doesnt exist, try to set it up again in short intervals (up to 5 times)
+                if (window.floatingButtonSetupAttempts < 5 || window.floatingButtonSetupAttempts == undefined) {
+                    window.floatingButtonSetupAttempts = (window.floatingButtonSetupAttempts == undefined ? 0 : window.floatingButtonSetupAttempts) + 1;
+                    setTimeout(setupFloatingButton, 500); //check after 500ms
+                } else {
+                    console.warn("Giving up floating button setup. Floating button was not found in a reasonable time.");
+                }
+            }
+
         };
 
         // Existing Firebase authentication logic
@@ -813,12 +827,14 @@
                             GTAClickerState.setScore(0);
                             saveScore(); // Initial save
                         }
-
-
-                    })
-                    .catch((error) => {
-                        console.error("Error loading score:", error);
-                    });
+                    renderGTAClicker();
+                })
+                .catch((error) => {
+                    console.error("Error loading score:", error);
+                        renderGTAClicker();
+                });
+            } else {
+                 renderGTAClicker();
             }
         };
 
@@ -826,7 +842,6 @@
             GTAClickerState.setScore(0);
             saveScore(); // Also save to Firestore when resetting
         }
-
 
 
         // Check if the click is outside of menu and close it
@@ -837,74 +852,80 @@
             if (!floatingButton || !clickerMenu) return; // Exit early if the buttons dont exist
 
             const isClickInsideMenu = clickerMenu.contains(event.target) || floatingButton.contains(event.target);
-            if (!isClickInsideMenu && GTAClickerState.showMenu ) { //check if menu is opened 
+            if (!isClickInsideMenu && GTAClickerState.showMenu ) { //check if menu is opened
               GTAClickerState.setShowMenu(false);
+                renderGTAClicker();
             }
         });
 
         const authListener = (user) => {
-                updateSignInButton(user);
-                const floatingButton = document.querySelector(".floating-button");
-            const clickerMenu = document.querySelector(".clicker-menu");
-                 if (floatingButton == null || clickerMenu == null) return;
+            updateSignInButton(user);
+            const floatingButton = document.querySelector(".floating-button");
 
-            if (user) {
-                floatingButton.style.display = 'flex'; // Always show the button
-                loadScore();
-            } else {
-                floatingButton.style.display = "none";
-                clickerMenu.style.display = "none";
+            if (floatingButton) {
+
+                if (user) {
+                    floatingButton.style.display = 'flex';
+
+                    loadScore(); // load and render inside the authListener
+
+                } else {
+                    floatingButton.style.display = "none";
+                    GTAClickerState.setShowMenu(false); // Hide the clicker menu
+                     renderGTAClicker();
+
+                }
             }
+
         };
 
-            signInButton.addEventListener('click', function () {
-             if (!checkFirebaseConfiguration()) return;
+        signInButton.addEventListener('click', function() {
+            if (!checkFirebaseConfiguration()) return;
             if (auth.currentUser) {
-                 // Sign out
-              auth.signOut()
-               .then(() => {
-                    console.log('User signed out');
-                    updateSignInButton(null);
-                    resetScore();
-               })
-            .catch((error) => {
-                  console.error('Sign-out error:', error);
-                  alert("Sign-out failed.");
-              });
-          } else {
-                // Sign in
+                auth.signOut()
+                    .then(() => {
+                        console.log('User signed out');
+                        updateSignInButton(null);
+                        resetScore();
+                         GTAClickerState.setShowMenu(false); // Also close the menu on sign out
+                         renderGTAClicker();
+                    })
+                    .catch((error) => {
+                        console.error('Sign-out error:', error);
+                        alert("Sign-out failed.");
+                    });
+            } else {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 provider.setCustomParameters({
-                     prompt: 'select_account' // Force account selection
-                 });
-                auth.signInWithPopup(provider)
-                .then((result) => {
-                    const user = result.user;
-                    console.log("User signed in:", user);
-                    updateSignInButton(user);
-                    loadScore();
-               })
-                .catch((error) => {
-                   let errorMessage = "Sign-in failed.";
-                   if (error.code === 'auth/popup-closed-by-user') {
-                        errorMessage = "Sign-in popup was closed.";
-                    } else if (error.code === 'auth/unauthorized-domain') {
-                          errorMessage =
-                         "This domain is not authorized.  Please authorize it in the Firebase console.";
-                   }
-                 alert(errorMessage);
-                    console.error("Sign-in error:", error);
-                   alert("Sign-in failed: " + error.message);
+                    prompt: 'select_account' // Force account selection
                 });
-             }
-         });
-     const initialRender = () => {
-            ReactDOM.render(React.createElement(GTAClicker, null), document.getElementById('react-root'));
-            };
+                auth.signInWithPopup(provider)
+                    .then((result) => {
+                        const user = result.user;
+                        console.log("User signed in:", user);
+                        updateSignInButton(user);
+                        loadScore(); // Load the score AFTER signing in
+                    })
+                    .catch((error) => {
+                        let errorMessage = "Sign-in failed.";
+                        if (error.code === 'auth/popup-closed-by-user') {
+                            errorMessage = "Sign-in popup was closed.";
+                        } else if (error.code === 'auth/unauthorized-domain') {
+                            errorMessage =
+                                "This domain is not authorized.  Please authorize it in the Firebase console.";
+                        }
+                        alert(errorMessage);
+                        console.error("Sign-in error:", error);
+                        alert("Sign-in failed: " + error.message);
+                    });
+            }
+        });
+
         auth.onAuthStateChanged(authListener);
 
-        // Call initialRender to render the GTAClicker after auth state is known
-        initialRender();
+        // Initial Render: Always Render Immediately
+         renderGTAClicker();
+           setupFloatingButton();
     </script>
 </body>
 
