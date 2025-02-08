@@ -109,7 +109,7 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            z-index: 1000; 
+            z-index: 1000;
         }
 
         #clickerMenu {
@@ -240,6 +240,27 @@
             height: 100%;
             background-color: #2B2B2B;
             width: calc(100% - var(--scorePercentage, 0%));
+        }
+
+        #casinoDrop {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #FFDA63;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-top: 10px;
+            display: none; /* Скрыт изначально */
+            font-size: 1em;
+        }
+
+        #casinoDrop.show {
+            display: block;
+        }
+
+        #casinoDrop a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
         }
     </style>
 
@@ -581,6 +602,9 @@
                 <div><span>STATUS</span><span class="stat-value" id="status">ROOKIE</span></div>
             </div>
             <div id="notificationsContainer"></div>
+            <div id="casinoDrop">
+                Теперь вы можете перейти в наше казино: <a href="https://ignis76.github.io/Rage-Casino/">Rage Casino</a>
+            </div>
         </div>
 
         <button id="floatingButton" class="floating-button">
@@ -644,12 +668,14 @@
     const respectLevelDisplay = document.getElementById('respectLevel');
     const statusDisplay = document.getElementById('status');
     const notificationsContainer = document.getElementById('notificationsContainer');
+    const casinoDrop = document.getElementById('casinoDrop'); // Получаем ссылку на элемент casinoDrop
     let score = 0;
     let showMenu = false;
     const MAX_SCORE = 100;
     let lastClickTime = 0;
     const clickDelay = 200;
     let isLoggedIn = false; // Track login status
+    const CASINO_CLICKS_REQUIRED = 2500; // Количество кликов для появления казино
 
 
     // Function to update UI based on authentication state
@@ -722,8 +748,8 @@
         }
     });
 
-    // NEW CLICKER JS
-        function toggleClickerMenu() {
+     // NEW CLICKER JS
+     function toggleClickerMenu() {
             showMenu = !showMenu;
             clickerMenu.classList.toggle('show');
         }
@@ -784,12 +810,19 @@
                 status = 'KINGPIN';
             }
             statusDisplay.textContent = status;
+
+            // Проверяем количество кликов и показываем казино
+            if (score >= CASINO_CLICKS_REQUIRED) {
+                casinoDrop.classList.add('show');
+            } else {
+                casinoDrop.classList.remove('show'); // Скрываем, если не достигнуто
+            }
         }
 
         function handleClick() {
             score++;
             updateScore();
-            saveData
+            saveData()
             createNotification();
         }
 
@@ -817,6 +850,7 @@
             score = 0;
            updateScore();
             saveData();
+            casinoDrop.classList.remove('show'); // Скрываем казино при ресете
        }
        
      function addPoint() {
