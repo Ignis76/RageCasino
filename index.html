@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -11,8 +12,12 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link rel="stylesheet" href="fonts/icomoon/style.css">
 
@@ -69,6 +74,7 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+
             100% {
                 opacity: 0;
                 transform: translateY(-100px);
@@ -94,7 +100,8 @@
             justify-content: center;
             z-index: 1000;
             transition: background-color 0.3s, transform 0.2s;
-            margin-bottom: 8px; /* Добавлен отступ от кнопки до меню */
+            margin-bottom: 8px;
+            /* Добавлен отступ от кнопки до меню */
         }
 
         .floating-button:hover {
@@ -122,8 +129,10 @@
             font-family: 'Arial Black', sans-serif;
             border: 2px solid #FFDA63;
             transition: all 0.3s ease;
-            display: none; /* Изначально скрываем */
-            margin-bottom: 16px; /* Отступ от меню до кнопки */
+            display: none;
+            /* Изначально скрываем */
+            margin-bottom: 16px;
+            /* Отступ от меню до кнопки */
         }
 
         #clickerMenu.show {
@@ -222,7 +231,8 @@
         .notification {
             position: absolute;
             left: 50%;
-            top: 30%; /* Чтобы появляться чуть выше */
+            top: 30%;
+            /* Чтобы появляться чуть выше */
             transform: translate(calc(-50% + var(--offsetX, 0px)), calc(-50% + var(--offsetY, 0px)));
             color: #FFDA63;
             font-size: 1.5em;
@@ -241,7 +251,7 @@
             background-color: #2B2B2B;
             width: calc(100% - var(--scorePercentage, 0%));
         }
-        
+
         /* Стили для ссылки на казино */
         #casinoLinkContainer {
             margin-top: 1em;
@@ -249,7 +259,6 @@
         }
 
         #casinoLink {
-            display: none; /* Скрываем ссылку по умолчанию */
             color: #FFDA63;
             font-weight: bold;
             text-decoration: none;
@@ -258,98 +267,106 @@
         #casinoLink:hover {
             text-decoration: underline;
         }
+
+        /* Style for the new descriptive gray line */
+        .descriptive-text {
+            color: #A1A1AA;
+            /* Same color as missionText */
+            font-size: 0.8em;
+        }
     </style>
 
 </head>
 
 <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
 
-<div class="site-wrap" id="home-section">
+    <div class="site-wrap" id="home-section">
 
-    <div class="site-mobile-menu site-navbar-target">
-        <div class="site-mobile-menu-header">
-            <div class="site-mobile-menu-close mt-3">
-                <span class="icon-close2 js-menu-toggle"></span>
+        <div class="site-mobile-menu site-navbar-target">
+            <div class="site-mobile-menu-header">
+                <div class="site-mobile-menu-close mt-3">
+                    <span class="icon-close2 js-menu-toggle"></span>
+                </div>
             </div>
+            <div class="site-mobile-menu-body"></div>
         </div>
-        <div class="site-mobile-menu-body"></div>
-    </div>
 
-    <header class="site-navbar site-navbar-target" role="banner">
-        <div class="container">
-            <div class="row align-items-center position-relative">
-
-                <div class="col-lg-4">
-                    <nav class="site-navigation text-right ml-auto " role="navigation">
-                        <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
-                            <li class="active"><a href="index.html" class="nav-link">Главная</a></li>
-                            <li><a href="technology.html" class="nav-link">Контент</a></li>
-                            <li><a href="404.html" class="nav-link">CAD models</a></li>
-                        </ul>
-                    </nav>
-                </div>
-
-                <div class="col-lg-4 text-center">
-                    <div class="site-logo">
-                        <a href="index.html">Robotek Rage</a>
-                    </div>
-                    <div class="ml-auto toggle-button d-inline-block d-lg-none">
-                        <a href="#" class="site-menu-toggle py-5 js-menu-toggle text-white">
-                            <span class="icon-menu h3 text-white"></span>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <nav class="site-navigation text-left mr-auto " role="navigation">
-                        <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
-                            <li><a href="about.html" class="nav-link">О нас</a></li>
-                            <li><a href="blog.html" class="nav-link">Блог</a></li>
-                            <li><a href="contact.html" class="nav-link">Контакты</a></li>
-                            <li>
-                                <a href="#" id="signInButton" class="nav-link" title="Войти">
-                                    <button class="signin-button">
-                                        <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
-                                    </button>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-
-            </div>
-        </div>
-    </header>
-
-    <div class="ftco-blocks-cover-1">
-        <div class="ftco-cover-1 overlay" style="background-image: url('images/robotekkz.png')">
+        <header class="site-navbar site-navbar-target" role="banner">
             <div class="container">
-                <div class="row align-items-center justify-content-center">
-                    <div class="col-lg-7 text-center">
-                        <h1 data-aos="fade-up" data-aos-delay="0">Мы команда Robotek</h1>
-                        <p data-aos="fade-up" data-aos-delay="100">Наш девиз не обосраться!</p>
-                        <p data-aos="fade-up" data-aos-delay="200"><a href="technology.html" class="btn primary-outline-white--hover">Наши уроки</a></p>
+                <div class="row align-items-center position-relative">
+
+                    <div class="col-lg-4">
+                        <nav class="site-navigation text-right ml-auto " role="navigation">
+                            <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
+                                <li class="active"><a href="index.html" class="nav-link">Главная</a></li>
+                                <li><a href="technology.html" class="nav-link">Контент</a></li>
+                                <li><a href="404.html" class="nav-link">CAD models</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="col-lg-4 text-center">
+                        <div class="site-logo">
+                            <a href="index.html">Robotek Rage</a>
+                        </div>
+                        <div class="ml-auto toggle-button d-inline-block d-lg-none">
+                            <a href="#" class="site-menu-toggle py-5 js-menu-toggle text-white">
+                                <span class="icon-menu h3 text-white"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <nav class="site-navigation text-left mr-auto " role="navigation">
+                            <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
+                                <li><a href="about.html" class="nav-link">О нас</a></li>
+                                <li><a href="blog.html" class="nav-link">Блог</a></li>
+                                <li><a href="contact.html" class="nav-link">Контакты</a></li>
+                                <li>
+                                    <a href="#" id="signInButton" class="nav-link" title="Войти">
+                                        <button class="signin-button">
+                                            <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+                                        </button>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+        <div class="ftco-blocks-cover-1">
+            <div class="ftco-cover-1 overlay" style="background-image: url('images/robotekkz.png')">
+                <div class="container">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col-lg-7 text-center">
+                            <h1 data-aos="fade-up" data-aos-delay="0">Мы команда Robotek</h1>
+                            <p data-aos="fade-up" data-aos-delay="100">Наш девиз не обосраться!</p>
+                            <p data-aos="fade-up" data-aos-delay="200"><a href="technology.html" class="btn primary-outline-white--hover">Наши уроки</a></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="features-v3">
-        <div class="container">
-            <div class="row justify-content-center text-center">
-                <div class="col-lg-5">
-                    <span class="text-primary">Наша цель</span>
-                    <h2 class="mb-5">Продвигать идеологии STEM</h2>
+        <div class="features-v3">
+            <div class="container">
+                <div class="row justify-content-center text-center">
+                    <div class="col-lg-5">
+                        <span class="text-primary">Наша цель</span>
+                        <h2 class="mb-5">Продвигать идеологии STEM</h2>
+                    </div>
                 </div>
-            </div>
-            <div class="row gutter-v1 justify-content-stretch">
-                <div class="col-lg-4">
-                    <div class="feature-v3-item h-100">
-                        <img src="images/fon_2.jpg" alt="Image" class="img-fluid">
-                        <h3>Вы можете ознакомиться с нашими CAD моделями</h3>
-                        <p>В этом разделе представлены CAD модели нашего производства, а также другие рекомендованные нами CAD модели для использования.</p>
-                        <div class="more"><a href="careers.html">Перейти</a></div>
+                <div class="row gutter-v1 justify-content-stretch">
+                    <div class="col-lg-4">
+                        <div class="feature-v3-item h-100">
+                            <img src="images/fon_2.jpg" alt="Image" class="img-fluid">
+                            <h3>Вы можете ознакомиться с нашими CAD моделями</h3>
+                            <p>В этом разделе представлены CAD модели нашего производства, а также другие рекомендованные нами CAD модели для использования.</p>
+                            <div class="more"><a href="careers.html">Перейти</a></div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -583,31 +600,32 @@
         </div>
     </footer>
 
-    <div id="gtaClicker">
+   <div id="gtaClicker">
+            <button id="floatingButton" class="floating-button">
+                 <i class="fas fa-gamepad text-xl"></i>
+            </button>
 
-        <div id="clickerMenu">
-            <h2>RESPECT+</h2>
-            <div id="score">0</div>
-            <div id="scoreBarContainer">
-                <div id="scoreBar"></div>
+            <div id="clickerMenu">
+                <h2>RESPECT+</h2>
+                <div id="score">0</div>
+                <div id="scoreBarContainer">
+                    <div id="scoreBar"></div>
+                </div>
+                <button id="clickButton">EARN RESPECT</button>
+                <div id="missionText">MISSION: Earn respect in Los Santos</div>
+                <div id="stats">
+                    <div><span>RESPECT LEVEL</span><span class="stat-value" id="respectLevel">0</span></div>
+                    <div><span>STATUS</span><span class="stat-value" id="status">ROOKIE</span></div>
+                </div>
+
+                <div id="casinoLinkContainer">
+                    <p class="descriptive-text">Теперь вы можете перейти в наше казино</p>
+                    <a id="casinoLink" href="https://ignis76.github.io/Rage-Casino/" target="_blank">Robotek Casino</a>
+                </div>
+
+                <div id="notificationsContainer"></div>
             </div>
-            <button id="clickButton">EARN RESPECT</button>
-            <div id="missionText">MISSION: Топ игроков получат призы от Robotek Rage на Central Asia</div>
-            <div id="stats">
-                <div><span>RESPECT LEVEL</span><span class="stat-value" id="respectLevel">0</span></div>
-                <div><span>STATUS</span><span class="stat-value" id="status">ROOKIE</span></div>
-            </div>
-            <!-- Добавляем контейнер для ссылки на казино -->
-            <div id="casinoLinkContainer">
-                <a id="casinoLink" href="https://ignis76.github.io/Rage-Casino/" target="_blank">Теперь вы можете перейти в наше казино Robotek Casino</a>
-            </div>
-            <div id="notificationsContainer"></div>
         </div>
-
-        <button id="floatingButton" class="floating-button">
-            <i class="fas fa-gamepad text-xl"></i>
-        </button>
-    </div>
 
 </div>
 
@@ -666,6 +684,7 @@
     const statusDisplay = document.getElementById('status');
     const notificationsContainer = document.getElementById('notificationsContainer');
     const casinoLink = document.getElementById('casinoLink'); // Получаем ссылку на казино
+    const casinoLinkContainer = document.getElementById('casinoLinkContainer'); // Получаем контейнер ссылки на казино
     let score = 0;
     let showMenu = false;
     const MAX_SCORE = 100;
@@ -686,7 +705,6 @@
             button.innerHTML = `<i class="fab fa-google" style="color:white"></i> Войти`;
             button.title = "Войти";
         }
-         floatingButton.style.display = 'flex';
     }
 
     // Check current auth state
@@ -697,7 +715,6 @@
         }
     });
 
-
     // Sign-in function
     signInButton.addEventListener('click', function() {
         if (!checkFirebaseConfiguration()) return;
@@ -706,7 +723,6 @@
             auth.signOut()
                 .then(() => {
                     console.log('User signed out');
-                    //  alert('You have been signed out.'); // Removed the alert
                     updateSignInButton(null);
                     resetClicker();
                 })
@@ -726,7 +742,6 @@
                     // User is signed in
                     const user = result.user;
                     console.log("User signed in:", user);
-                    // alert(`Welcome, ${user.displayName}!`); // Removed the alert
                     updateSignInButton(user);
                     // Load data
                     loadData();
@@ -745,17 +760,15 @@
         }
     });
 
-    // NEW CLICKER JS
-        function toggleClickerMenu() {
-            showMenu = !showMenu;
-            clickerMenu.classList.toggle('show');
-        }
+    function toggleClickerMenu() {
+        showMenu = !showMenu;
+        clickerMenu.classList.toggle('show');
+    }
 
-      
-        floatingButton.addEventListener('click', toggleClickerMenu);
+    floatingButton.addEventListener('click', toggleClickerMenu);
 
-         //Function to save data to firestore
-         function saveData() {
+     //Function to save data to firestore
+     function saveData() {
             if (!isLoggedIn) return;
             db.collection("users").doc(auth.currentUser.uid).set({
                  score: score
@@ -765,33 +778,32 @@
         }
     function loadData() {
         if (!isLoggedIn) {
-             resetClicker();
+            resetClicker();
                 return;
-          }
-           db.collection("users").doc(auth.currentUser.uid).get()
-                .then((doc) => {
-                   if (doc.exists) {
-                        score = doc.data().score || 0;
-                       updateScore();
-                         console.log("Data loaded successfully:", score);
-                   } else {
-                      console.log("No data found, setting to 0");
-                      resetClicker();
-                        saveData();
-                   }
-           })
-           .catch((error) => console.error("Error loading data:", error));
+        }
+        db.collection("users").doc(auth.currentUser.uid).get()
+            .then((doc) => {
+                if (doc.exists) {
+                    score = doc.data().score || 0;
+                    updateScore();
+                    console.log("Data loaded successfully:", score);
+                } else {
+                    console.log("No data found, setting to 0");
+                    resetClicker();
+                    saveData();
+                }
+            })
+            .catch((error) => console.error("Error loading data:", error));
     }
-     // Close click
-         // Close clicker menu on outside click
+
          document.addEventListener('click', function(event) {
             const isClickInsideMenu = clickerMenu.contains(event.target) || floatingButton.contains(event.target);
             if (!isClickInsideMenu && clickerMenu.classList.contains('show')) {
-                 toggleClickerMenu();
+                toggleClickerMenu();
             }
         });
-        
-          function updateScore() {
+
+        function updateScore() {
             scoreDisplay.textContent = score;
             const percentage = Math.min((score / MAX_SCORE) * 100, 100);
             scoreBar.style.width = `${percentage}%`;
@@ -809,20 +821,40 @@
             statusDisplay.textContent = status;
 
              // Show casino link if score exceeds threshold
-            if (score >= CASINO_THRESHOLD) {
-                casinoLink.style.display = 'block';
-            } else {
-                casinoLink.style.display = 'none';
-            }
-        }
+            const showCasino = score >= CASINO_THRESHOLD;
+            const casinoLinkContainer = document.getElementById('casinoLinkContainer');
 
-        function handleClick() {
-            score++;
+           casinoLinkContainer.style.display = showCasino ? "block" : "none";
+
             updateScore();
             saveData()
-            createNotification();
+        }
+        function addPoint() {
+      if (!isLoggedIn) {
+            alert("Пожалуйста, войдите в аккаунт, чтобы кликать!");
+            return;
         }
 
+        const now = Date.now();
+        if (now - lastClickTime > clickDelay) {
+            score++;
+            updateScore();
+             saveData();
+            lastClickTime = now;
+        }
+    }
+// OLD CLICKER  FUNCTION
+     function resetClicker() {
+            score = 0;
+           updateScore();
+            saveData();
+       }
+           function handleClick() {
+            score++;
+             updateScore();
+             saveData()
+             createNotification();
+        }
         function createNotification() {
             const notification = document.createElement('div');
             notification.classList.add('notification');
@@ -841,26 +873,7 @@
         }
 
         clickButton.addEventListener('click', addPoint);
-          
-      // OLD CLICKER  FUNCTION
-     function resetClicker() {
-            score = 0;
-           updateScore();
-            saveData();
-       }
-       
-     function addPoint() {
-      if (!isLoggedIn) {
-            alert("Пожалуйста, войдите в аккаунт, чтобы кликать!");
-            return;
-        }
-
-        const now = Date.now();
-        if (now - lastClickTime > clickDelay) {
-           handleClick()
-            lastClickTime = now;
-        }
-    }
 </script>
 </body>
+
 </html>
