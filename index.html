@@ -533,7 +533,6 @@
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/jquery.sticky.js"></script>
-    <script src="js/jquery.waypoints.min.js"></script>
     <script src="js/jquery.fancybox.min.js"></script>
     <script src="js/jquery.easing.1.3.js"></script>
     <script src="js/aos.js"></script>
@@ -576,7 +575,7 @@
                 saveScore(); // Save score to Firestore after updating it
                 renderGTAClicker(); // Re-render the GTAClicker after updating score
             },
-            showMenu: false,  // Initialize with menu closed!
+            showMenu: false, // Initialize with menu closed!
             setShowMenu: (newShowMenu) => {
                 GTAClickerState.showMenu = newShowMenu;
                 renderGTAClicker();
@@ -664,7 +663,7 @@
 
                         /* Score Bar */
                         React.createElement('div', {
-                               className: "bg-gray-800 h-4 rounded-full mb-6 overflow-hidden"
+                                className: "bg-gray-800 h-4 rounded-full mb-6 overflow-hidden"
                             },
                             React.createElement('div', {
                                 className: "bg-gradient-to-r from-yellow-500 to-yellow-300 h-full transition-all duration-300",
@@ -733,7 +732,8 @@
                                 }, React.createElement('div', {
                                     className: "text-yellow-500 text-3xl font-bold whitespace-nowrap",
                                     style: {
-                                        textShadow: '2px 2px 4px rgba(0,0,0,0.5)',                                        animation: 'respectFloat 1s ease-out forwards'
+                                        textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+                                        animation: 'respectFloat 1s ease-out forwards'
                                     }
                                 }, "+RESPECT"))
                             )
