@@ -271,7 +271,21 @@
                 <span class="icon-close2 js-menu-toggle"></span>
             </div>
         </div>
-        <div class="site-mobile-menu-body"></div>
+        <div class="site-mobile-menu-body">
+          <ul class="site-nav-wrap">
+            <li><a href="index.html" class="nav-link">Главная</a></li>
+            <li><a href="technology.html" class="nav-link">Контент</a></li>
+            <li><a href="cad.html" class="nav-link">CAD models</a></li>
+            <li><a href="about.html" class="nav-link">О нас</a></li>
+            <li><a href="blog.html" class="nav-link">Блог</a></li>
+            <li><a href="contact.html" class="nav-link">Контакты</a></li>
+            <li>
+              <button id="signInButtonMobile" class="signin-button">
+                  <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
     </div>
 
     <header class="site-navbar site-navbar-target" role="banner">
@@ -322,9 +336,7 @@
                         <p data-aos="fade-up" data-aos-delay="100">Наш девиз не обосраться!</p>
                         <p data-aos="fade-up" data-aos-delay="200">
                             <a href="technology.html" class="btn primary-outline-white--hover">Наши уроки</a>
-                             <button id="signInButton" class="signin-button">
-                                <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
-                            </button>
+
                         </p>
                     </div>
                 </div>
@@ -656,46 +668,40 @@
     const respectLevelDisplay = document.getElementById('respectLevel');
     const statusDisplay = document.getElementById('status');
     const notificationsContainer = document.getElementById('notificationsContainer');
-     const casinoLink = document.getElementById('casinoLink'); 
     let score = 0;
     let showMenu = false;
     const MAX_SCORE = 100;
     let lastClickTime = 0;
     const clickDelay = 200;
-    let isLoggedIn = false; // Track login status
-	// Function to update UI based on authentication state
-	const CASINO_THRESHOLD = 2500; // Порог кликов для отображения ссылки на казино
-	
-    function updateSignInButton(user) {
-        const button = document.getElementById('signInButton'); // Теперь ищем кнопку на ГЛАВНОМ экране
-        const buttonMobile = document.getElementById('signInButtonMobile'); // И кнопку в мобильном меню
-
+    let isLoggedIn = false;
+	const CASINO_THRESHOLD = 2500; 
+    // Track login status
+       function updateSignInButton(user) {
+        const button = document.getElementById('signInButtonMobile'); // Fixed query selector
         isLoggedIn = !!user; // Update login status
-
         if (user) {
             button.innerHTML = `<i class="fas fa-sign-out-alt" style="color:white"></i>`;
             button.title = "Выйти";
-            if (buttonMobile) {
-                buttonMobile.innerHTML = `<i class="fas fa-sign-out-alt" style="color:white"></i>`;
-                buttonMobile.title = "Выйти";
-            }
         } else {
             button.innerHTML = `<i class="fab fa-google" style="color:white"></i> Войти`;
             button.title = "Войти";
-            if (buttonMobile) {
-                buttonMobile.innerHTML = `<i class="fab fa-google" style="color:white"></i> Войти`;
-                buttonMobile.title = "Войти";
-            }
         }
-        floatingButton.style.display = 'flex';
+         floatingButton.style.display = 'flex';
     }
 
+    // Check current auth state
+    auth.onAuthStateChanged((user) => {
+        updateSignInButton(user);
+        if (user) {
+            loadData();
+        }
+    });
 	function handleSignInClick() {
       if (!checkFirebaseConfiguration()) return;
         if (auth.currentUser) {
             // Sign out
             auth.signOut()
-                .then(() => {
+                .then(() =>{
                     console.log('User signed out');
                     updateSignInButton(null);
                     resetClicker();
@@ -733,55 +739,56 @@
         }
 	}
 
-    // Check current auth state
-    auth.onAuthStateChanged((user) => {
-        updateSignInButton(user);
-        if (user) {
-            loadData();
-        }
+	  document.addEventListener('click', function(event) {
+		if (event.target.classList.contains('signin-button')) {
+			event.preventDefault(); // Prevent the default action
+			handleSignInClick();
+		}
     });
 
-    // Sign-in function
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('signin-button')) {
-            event.preventDefault();
-            handleSignInClick()
-        }
-    });
-
-// Function to add button "Войти" on mobile menu
 	document.addEventListener('DOMContentLoaded', function() {
-		const mainNav = document.querySelector('.site-menu.main-menu');
-		const mobileMenuBody = document.querySelector('.site-mobile-menu-body .site-nav-wrap');
-		const signInButton = document.getElementById('signInButton');
-		const mobileMenu = document.querySelector('.site-mobile-menu');
+    // Получаем элементы DOM
 
-    if (mobileMenuBody) {
-        mobileMenuBody.innerHTML = ''; // Clear menu
-          const menuItems = [
-        { text: 'Главная', link: 'index.html' },
-        { text: 'Контент', link: 'technology.html' },
-        { text: 'CAD models', link: 'cad.html' },
-        { text: 'О нас', link: 'about.html' },
-        { text: 'Блог', link: 'blog.html' },
-        { text: 'Контакты', link: 'contact.html' }
-		];
-		//Add items menu in burger
-		menuItems.forEach(item =>{
-			const listItem = document.createElement('li');
-            const link = document.createElement('a');
-            link.href = item.link;
-            link.className = 'nav-link';
-            link.textContent = item.text;
-            listItem.appendChild(link);
-            mobileMenuBody.appendChild(listItem)
-			});
+        // Заполняем мобильное меню
+	   function populateMobileMenu() {
+		   const mobileMenuBody = document.querySelector('.site-mobile-menu-body .site-nav-wrap');
+	       mobileMenuBody.innerHTML = '';
+                // Задаём массив с пунктами меню и ссылками
+                const menuItems = [
+                    { text: 'Главная', link: 'index.html' },
+                    { text: 'Контент', link: 'technology.html' },
+                    { text: 'CAD models', link: 'cad.html' },
+                    { text: 'О нас', link: 'about.html' },
+                    { text: 'Блог', link: 'blog.html' },
+                    { text: 'Контакты', link: 'contact.html' }
+                ];
+	
+				// Создаем и добавляем пункты меню
+				menuItems.forEach(item => {
+					const listItem = document.createElement('li');
+					const link = document.createElement('a');
+					link.href = item.link;
+					link.className = 'nav-link';
+					link.textContent = item.text;
+					listItem.appendChild(link);
+					mobileMenuBody.appendChild(listItem);
+				});
+	
+			    // Создаем кнопку "Войти"
+				const listItem = document.createElement('li');
+				listItem.innerHTML = `
+					<button id="signInButtonMobile" class="signin-button">
+						<i class="fab fa-google" style="color:white; flex-shrink: 0;"></i>
+					</button>`;
+				mobileMenuBody.appendChild(listItem);
+			 updateSignInButton();
+    }
+	
+		// Заполняем мобильное меню
+		populateMobileMenu();
 
-            // Add sign in button
-
-        }
-     
     });
+
     // NEW CLICKER JS
         function toggleClickerMenu() {
             showMenu = !showMenu;
