@@ -263,7 +263,7 @@
                 <li><a href="about.html">О нас</a></li>
                 <li><a href="blog.html">Блог</a></li>
                 <li><a href="contact.html">Контакты</a></li>
-                <li>
+                <li id="mobileSignInLi">
                     <a href="#" id="mobileSignInButton" title="Войти">
                         <button class="signin-button">
                             <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
@@ -305,7 +305,7 @@
                             <li><a href="about.html" class="nav-link">О нас</a></li>
                             <li><a href="blog.html" class="nav-link">Блог</a></li>
                             <li><a href="contact.html" class="nav-link">Контакты</a></li>
-                            <li>
+                            <li id = "desktopSignInLi">
                                 <a href="#" id="signInButton" class="nav-link" title="Войти">
                                     <button class="signin-button">
                                         <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
@@ -650,7 +650,7 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
     const signInButton = document.getElementById('signInButton');
-    const mobileSignInButton = document.getElementById('mobileSignInButton');  // Получаем кнопку из мобильного меню
+    const mobileSignInButton = document.getElementById('mobileSignInButton');
     const floatingButton = document.querySelector(".floating-button");
     const clickerMenu = document.getElementById('clickerMenu');
     const scoreDisplay = document.getElementById('score');
@@ -668,217 +668,7 @@
     const clickDelay = 200;
     let isLoggedIn = false; // Track login status
 
-
     // Function to update UI based on authentication state
-    function updateSignInButton(user) {
-        const button = document.getElementById('signInButton');
-        const mobileButton = document.getElementById('mobileSignInButton'); // Получаем кнопку из мобильного меню
-        isLoggedIn = !!user; // Update login status
-        if (user) {
-            button.innerHTML = `<i class="fas fa-sign-out-alt" style="color:white"></i>`;
-            button.title = "Выйти";
-            mobileButton.innerHTML = `<i class="fas fa-sign-out-alt" style="color:white"></i>`; // Обновляем мобильную кнопку
-            mobileButton.title = "Выйти";
-        } else {
-            button.innerHTML = `<i class="fab fa-google" style="color:white"></i> Войти`;
-            button.title = "Войти";
-             mobileButton.innerHTML = `<i class="fab fa-google" style="color:white"></i> Войти`; // Обновляем мобильную кнопку
-             mobileButton.title = "Войти";
-        }
-         floatingButton.style.display = 'flex';
-    }
-
-    // Check current auth state
-    auth.onAuthStateChanged((user) => {
-        updateSignInButton(user);
-        if (user) {
-            loadData();
-        }
-    });
-
-
-    // Sign-in function
-    function handleSignInClick() {
-        if (!checkFirebaseConfiguration()) return;
-        if (auth.currentUser) {
-            // Sign out
-            auth.signOut()
-                .then(() => {
-                    console.log('User signed out');
-                    //  alert('You have been signed out.'); // Removed the alert
-                    updateSignInButton(null);
-                    resetClicker();
-                })
-                .catch((error) => {
-                    console.error('Sign-out error:', error);
-                    let errorMessage = "Sign-out failed.";
-                    alert(errorMessage);
-                });
-        } else {
-            // Sign in
-            const provider = new firebase.auth.GoogleAuthProvider();
-            provider.setCustomParameters({
-                prompt: 'select_account' // Force account selection
-            });
-            auth.signInWithPopup(provider)
-                .then((result) => {
-                    // User is signed in
-                    const user = result.user;
-                    console.log("User signed in:", user);
-                    // alert(`Welcome, ${user.displayName}!`); // Removed the alert
-                    updateSignInButton(user);
-                    // Load data
-                    loadData();
-                })
-                .catch((error) => {
-                    let errorMessage = "Sign-in failed.";
-                    if (error.code === 'auth/popup-closed-by-user') {
-                        errorMessage = "Sign-in popup was closed.";
-                    } else if (error.code === 'auth/unauthorized-domain') {
-                        errorMessage = "This domain is not authorized.  Please authorize it in the Firebase console.";
-                    }
-                    alert(errorMessage);
-                    console.error("Sign-in error:", error);
-                    alert("Sign-in failed: " + error.message);                });
-        }
-    }
-
-    //NEW LOGIC AVOID DUPES
-        const mainMenuItems = document.querySelectorAll('.site-menu.main-menu > li');
-        const mobileMenuBody = document.querySelector('.site-mobile-menu-body');
-        const mobileNavWrap = document.createElement('ul');
-        mobileNavWrap.classList.add('site-nav-wrap');
-
-        mainMenuItems.forEach(item => {
-        const clonedItem = item.cloneNode(true);
-            mobileNavWrap.appendChild(clonedItem);
-        });
-         const mobileSignInLi = document.createElement('li');
-            mobileSignInLi.innerHTML = `<a href="#" id="mobileSignInButton" title="Войти">
-                                            <button class="signin-button">
-                                                <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
-                                            </button>
-                                        </a>`;
-            mobileNavWrap.appendChild(mobileSignInLi);
-            mobileMenuBody.appendChild(mobileNavWrap);
-
-        signInButton.addEventListener('click', handleSignInClick);
-        document.getElementById('mobileSignInButton').addEventListener('click', handleSignInClick);
-
-
-
-
-    // NEW CLICKER JS
-        function toggleClickerMenu() {
-            showMenu = !showMenu;
-            clickerMenu.classList.toggle('show');
-        }
-
-
-        floatingButton.addEventListener('click', toggleClickerMenu);
-
-         //Function to save data to firestore
-     function saveData() {
-            if (!isLoggedIn) return;
-            db.collection("users").doc(auth.currentUser.uid).set({
-                 score: score
-            })
-         .then(() => console.log("Data saved successfully!"))
-             .catch((error) => console.error("Error saving data:", error));
-        }
-
-        function handleClick() {
-            score++;
-            updateScore();
-            saveData(); // Здесь вызываем saveData после того, как она определена
-            createNotification();
-        }
-
-    function loadData() {
-        if (!isLoggedIn) {
-             resetClicker();
-                return;
-          }
-           db.collection("users").doc(auth.currentUser.uid).get()
-                .then((doc) => {
-                   if (doc.exists) {
-                        score = doc.data().score || 0;
-                       updateScore();
-                         console.log("Data loaded successfully:", score);
-                   } else {
-                      console.log("No data found, setting to 0");
-                      resetClicker();
-                        saveData();
-                   }
-           })
-           .catch((error) => console.error("Error loading data:", error));
-    }
-     // Close click
-         // Close clicker menu on outside click
-         document.addEventListener('click', function(event) {
-            const isClickInsideMenu = clickerMenu.contains(event.target) || floatingButton.contains(event.target);
-            if (!isClickInsideMenu && clickerMenu.classList.contains('show')) {
-                 toggleClickerMenu();
-            }
-        });
-
-          function updateScore() {
-            scoreDisplay.textContent = score;
-            const percentage = Math.min((score / MAX_SCORE) * 100, 100);
-            scoreBar.style.width = `${percentage}%`;
-            scoreBarContainer.style.setProperty('--scorePercentage', `${percentage}%`);
-
-            const respectLevel = Math.floor(score / 10);
-            respectLevelDisplay.textContent = respectLevel;
-
-            let status = 'ROOKIE';
-            if (score >= 10 && score < 50) {
-                status = 'THUG';
-            } else if (score >= 50) {
-                status = 'KINGPIN';
-            }
-            statusDisplay.textContent = status;
-        }
-
-
-        function createNotification() {
-            const notification = document.createElement('div');
-            notification.classList.add('notification');
-            notification.textContent = '+RESPECT';
-
-            const offsetX = Math.random() * 40 - 20;
-            const offsetY = Math.random() * 20 - 10;
-
-            notification.style.setProperty('--offsetX', `${offsetX}px`);
-            notification.style.setProperty('--offsetY', `${offsetY}px`);
-            notificationsContainer.appendChild(notification);
-
-            setTimeout(() => {
-                notification.remove();
-            }, 1000);
-        }
-
-        clickButton.addEventListener('click', addPoint);
-
-      // OLD CLICKER  FUNCTION
-     function resetClicker() {
-            score = 0;
-           updateScore();
-            saveData();
-       }
-
-     function addPoint() {
-      if (!isLoggedIn) {
-            alert("Пожалуйста, войдите в аккаунт, чтобы кликать!");
-            return;
-        }
-
-        const now = Date.now();
-        if (now - lastClickTime > clickDelay) {
-           handleClick()
-            lastClickTime = now;
-        }
-    }
     function updateSignInButton(user) {
         const button = document.getElementById('signInButton');
         const mobileButton = document.getElementById('mobileSignInButton');
@@ -897,6 +687,189 @@
         updateButtonContent(button);
         updateButtonContent(mobileButton, true);
         floatingButton.style.display = 'flex';
+    }
+
+
+    // Sign-in function
+    function handleSignInClick(event) {
+        if (!checkFirebaseConfiguration()) return;
+
+        if (auth.currentUser) {
+            auth.signOut()
+                .then(() => {
+                    console.log('User signed out');
+                    updateSignInButton(null);
+                    resetClicker();
+                })
+                .catch((error) => {
+                    console.error('Sign-out error:', error);
+                    alert("Sign-out failed: " + error.message);
+                });
+        } else {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({
+                prompt: 'select_account'
+            });
+
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    console.log("User signed in:", user);
+                    updateSignInButton(user);
+                    loadData();
+                })
+                .catch((error) => {
+                    console.error("Sign-in error:", error);
+                    alert("Sign-in failed: " + error.message);
+                });
+        }
+    }
+
+    // Attach event listeners after the DOM has loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      const mainMenuItems = document.querySelectorAll('.site-menu.main-menu > li');
+      const mobileMenuBody = document.querySelector('.site-mobile-menu-body');
+      const mobileNavWrap = document.createElement('ul');
+      mobileNavWrap.classList.add('site-nav-wrap');
+
+      mainMenuItems.forEach(item => {
+        const clonedItem = item.cloneNode(true);
+        mobileNavWrap.appendChild(clonedItem);
+      });
+
+      const mobileSignInLi = document.createElement('li');
+      mobileSignInLi.id = 'mobileSignInLi';
+      mobileSignInLi.innerHTML = `
+        <a href="#" id="mobileSignInButton" title="Войти">
+          <button class="signin-button">
+            <i class="fab fa-google" style="color:white; flex-shrink: 0;"></i>
+          </button>
+        </a>
+      `;
+      mobileNavWrap.appendChild(mobileSignInLi);
+      mobileMenuBody.appendChild(mobileNavWrap);
+
+      // Ensure the mobileSignInButton exists before attaching the event listener
+      const mobileSignInButtonElem = document.getElementById('mobileSignInButton');
+      if (mobileSignInButtonElem) {
+        mobileSignInButtonElem.addEventListener('click', handleSignInClick);
+      } else {
+        console.error('mobileSignInButton not found.');
+      }
+
+      // Attach the event listener to the desktop sign-in button
+      signInButton.addEventListener('click', handleSignInClick);
+    });
+
+    // NEW CLICKER JS
+    function toggleClickerMenu() {
+        showMenu = !showMenu;
+        clickerMenu.classList.toggle('show');
+    }
+
+    floatingButton.addEventListener('click', toggleClickerMenu);
+
+    //Function to save data to firestore
+    function saveData() {
+        if (!isLoggedIn) return;
+        db.collection("users").doc(auth.currentUser.uid).set({
+            score: score
+        })
+            .then(() => console.log("Data saved successfully!"))
+            .catch((error) => console.error("Error saving data:", error));
+    }
+
+    function handleClick() {
+        score++;
+        updateScore();
+        saveData(); // Здесь вызываем saveData после того, как она определена
+        createNotification();
+    }
+
+    function loadData() {
+        if (!isLoggedIn) {
+            resetClicker();
+            return;
+        }
+        db.collection("users").doc(auth.currentUser.uid).get()
+            .then((doc) => {
+                if (doc.exists) {
+                    score = doc.data().score || 0;
+                    updateScore();
+                    console.log("Data loaded successfully:", score);
+                } else {
+                    console.log("No data found, setting to 0");
+                    resetClicker();
+                    saveData();
+                }
+            })
+            .catch((error) => console.error("Error loading data:", error));
+    }
+
+    // Close click
+    // Close clicker menu on outside click
+    document.addEventListener('click', function (event) {
+        const isClickInsideMenu = clickerMenu.contains(event.target) || floatingButton.contains(event.target);
+        if (!isClickInsideMenu && clickerMenu.classList.contains('show')) {
+            toggleClickerMenu();
+        }
+    });
+
+    function updateScore() {
+        scoreDisplay.textContent = score;
+        const percentage = Math.min((score / MAX_SCORE) * 100, 100);
+        scoreBar.style.width = `${percentage}%`;
+        scoreBarContainer.style.setProperty('--scorePercentage', `${percentage}%`);
+
+        const respectLevel = Math.floor(score / 10);
+        respectLevelDisplay.textContent = respectLevel;
+
+        let status = 'ROOKIE';
+        if (score >= 10 && score < 50) {
+            status = 'THUG';
+        } else if (score >= 50) {
+            status = 'KINGPIN';
+        }
+        statusDisplay.textContent = status;
+    }
+
+    function createNotification() {
+        const notification = document.createElement('div');
+        notification.classList.add('notification');
+        notification.textContent = '+RESPECT';
+
+        const offsetX = Math.random() * 40 - 20;
+        const offsetY = Math.random() * 20 - 10;
+
+        notification.style.setProperty('--offsetX', `${offsetX}px`);
+        notification.style.setProperty('--offsetY', `${offsetY}px`);
+        notificationsContainer.appendChild(notification);
+
+        setTimeout(() => {
+            notification.remove();
+        }, 1000);
+    }
+
+    clickButton.addEventListener('click', addPoint);
+
+    // OLD CLICKER  FUNCTION
+    function resetClicker() {
+        score = 0;
+        updateScore();
+        saveData();
+    }
+
+    function addPoint() {
+        if (!isLoggedIn) {
+            alert("Пожалуйста, войдите в аккаунт, чтобы кликать!");
+            return;
+        }
+
+        const now = Date.now();
+        if (now - lastClickTime > clickDelay) {
+            handleClick()
+            lastClickTime = now;
+        }
     }
 </script>
 </body>
