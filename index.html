@@ -123,7 +123,7 @@
             border: 2px solid #FFDA63;
             transition: all 0.3s ease;
             display: none; /* Изначально скрываем */
-            margin-bottom: 16px; /* Отступ от кнопки до меню */
+            margin-bottom: 16px; /* Отступ от меню до кнопки */
         }
 
         #clickerMenu.show {
@@ -310,14 +310,10 @@
                             <li><a href="about.html" class="nav-link">О нас</a></li>
                             <li><a href="blog.html" class="nav-link">Блог</a></li>
                             <li><a href="contact.html" class="nav-link">Контакты</a></li>
-                            <li>
-                                <a href="#" id="signInButton" class="nav-link" title="Войти">
-                                    <button class="signin-button">
-                                        <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
-                                    </button>
-                                </a>
-                            </li>
                         </ul>
+                       <button id="signInButton" class="signin-button">
+                           <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+                       </button>
                     </nav>
                 </div>
 
@@ -676,8 +672,7 @@
     const clickDelay = 200;
     let isLoggedIn = false; // Track login status
     const CASINO_THRESHOLD = 2500; // Порог кликов для отображения ссылки на казино
-	
-	
+
     // Function to update UI based on authentication state
     function updateSignInButton(user) {
         const button = document.getElementById('signInButton');
@@ -699,73 +694,107 @@
             loadData();
         }
     });
-	
-	document.addEventListener('DOMContentLoaded', function() {
-		const mainNav = document.querySelector('.site-menu.main-menu');
-		const mobileMenuBody = document.querySelector('.site-mobile-menu-body .site-nav-wrap');
-		const signInButton = document.getElementById('signInButton');
 
-		if (mainNav && mobileMenuBody) {
-			const clonedNav = mainNav.cloneNode(true);
-			mobileMenuBody.appendChild(clonedNav);
-		}
+    document.addEventListener('DOMContentLoaded', function() {
+        // Получаем элементы DOM
+        const mainNav = document.querySelector('.site-menu.main-menu');
+        const mobileMenuBody = document.querySelector('.site-mobile-menu-body .site-nav-wrap');
+        const signInButton = document.getElementById('signInButton');
+        const mobileMenu = document.querySelector('.site-mobile-menu');
+        const mobileMenuToggle = document.querySelector('.site-menu-toggle');
 
+        // Функция для клонирования и добавления пунктов меню
+        function populateMobileMenu() {
+            if (mainNav && mobileMenuBody) {
+                // Очищаем мобильное меню
+                mobileMenuBody.innerHTML = '';
 
-	const signInButtons = document.querySelectorAll('.signin-button');
-    signInButtons.forEach(signInButton => {
-        if (signInButton) {
-            signInButton.addEventListener('click', function(event) {
-                event.preventDefault();
-                if (!checkFirebaseConfiguration()) return;
-                if (auth.currentUser) {
-                    auth.signOut()
-                        .then(() => {
-                            console.log('User signed out');
-                            updateSignInButton(null);
-                            resetClicker();
-                        })
-                        .catch((error) => {
-                            console.error('Sign-out error:', error);
-                            let errorMessage = "Sign-out failed.";
-                            alert(errorMessage);
-                        });
-                } else {
-                    const provider = new firebase.auth.GoogleAuthProvider();
-                    provider.setCustomParameters({
-                        prompt: 'select_account'
-                    });
-                    auth.signInWithPopup(provider)
-                        .then((result) => {
-                            const user = result.user;
-                            console.log("User signed in:", user);
-                            updateSignInButton(user);
-                            loadData();
-                        })
-                        .catch((error) => {
-                            let errorMessage = "Sign-in failed.";
-                            if (error.code === 'auth/popup-closed-by-user') {
-                                errorMessage = "Sign-in popup was closed.";
-                            } else if (error.code === 'auth/unauthorized-domain') {
-                                errorMessage = "This domain is not authorized.  Please authorize it in the Firebase console.";
-                            }
-                            alert(errorMessage);
-                            console.error("Sign-in error:", error);
-                            alert("Sign-in failed: " + error.message);
-                        });
+                // Клонируем элементы основного меню
+                const clonedNav = mainNav.cloneNode(true);
+                mobileMenuBody.appendChild(clonedNav);
+
+                // Создаем кнопку входа в мобильном меню (если ее там нет)
+                if (signInButton) {
+                    const listItem = document.createElement('li');
+                    listItem.appendChild(signInButton.cloneNode(true)); // Клонируем кнопку, чтобы не переместить ее из desktop-меню
+                    mobileMenuBody.appendChild(listItem);
                 }
-            });
-
-            signInButton.addEventListener('touchstart', function(event) {
-                event.preventDefault();
-            });
-
-        } else {
-            console.error("Element with class 'signin-button' not found.");
+            }
         }
-    });
-});
 
-    // NEW CLICKER JS
+        // Вызываем функцию для заполнения мобильного меню
+        populateMobileMenu();
+
+        // Вешаем обработчик события на родительский элемент (делегирование событий)
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('signin-button')) {
+                event.preventDefault();
+                handleSignInClick(); // Вызываем функцию обработки клика
+            }
+        });
+
+        // Обработчик touchstart
+        document.addEventListener('touchstart', function(event) {
+            if (event.target.classList.contains('signin-button')) {
+                event.preventDefault();
+            }
+        });
+
+	
+	//Функция для обработки входа
+	function handleSignInClick() {
+		if (!checkFirebaseConfiguration()) return;
+            if (auth.currentUser) {
+                // Sign out
+                auth.signOut()
+                    .then(() => {
+                        console.log('User signed out');
+                        updateSignInButton(null);
+                        resetClicker();
+                    })
+                    .catch((error) => {
+                        console.error('Sign-out error:', error);
+                        let errorMessage = "Sign-out failed.";
+                        alert(errorMessage);
+                    });
+            } else {
+                // Sign in
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.setCustomParameters({
+                    prompt: 'select_account'
+                });
+                auth.signInWithPopup(provider)
+                    .then((result) => {
+                        const user = result.user;
+                        console.log("User signed in:", user);
+                        updateSignInButton(user);
+                        loadData();
+                    })
+                    .catch((error) => {
+                        let errorMessage = "Sign-in failed.";
+                        if (error.code === 'auth/popup-closed-by-user') {
+                            errorMessage = "Sign-in popup was closed.";
+                        } else if (error.code === 'auth/unauthorized-domain') {
+                            errorMessage = "This domain is not authorized.  Please authorize it in the Firebase console.";
+                        }
+                        alert(errorMessage);
+                        console.error("Sign-in error:", error);
+                        alert("Sign-in failed: " + error.message);
+                    });
+            }
+	}
+
+    // Инициализация Firebase (если еще не инициализирована)
+    if (!firebase.apps.length) {
+        try {
+            firebase.initializeApp(firebaseConfig);
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+    }
+
+	
+    // NEW CLICKER JS - functions for RESPECT
         function toggleClickerMenu() {
             showMenu = !showMenu;
             clickerMenu.classList.toggle('show');
@@ -880,6 +909,7 @@
             lastClickTime = now;
         }
     }
+});
 </script>
 </body>
 </html>
