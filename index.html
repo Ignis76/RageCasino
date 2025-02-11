@@ -241,23 +241,6 @@
             background-color: #2B2B2B;
             width: calc(100% - var(--scorePercentage, 0%));
         }
-        
-        /* Стили для ссылки на казино */
-        #casinoLinkContainer {
-            margin-top: 1em;
-            text-align: center;
-        }
-
-        #casinoLink {
-            display: none; /* Скрываем ссылку по умолчанию */
-            color: #FFDA63;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        #casinoLink:hover {
-            text-decoration: underline;
-        }
     </style>
 
 </head>
@@ -273,9 +256,19 @@
             </div>
         </div>
         <div class="site-mobile-menu-body">
-            <ul class="site-nav-wrap">
-                <!-- Пункты меню будут добавлены сюда с помощью JavaScript -->
-            </ul>
+          <ul class="site-nav-wrap">
+            <li><a href="index.html" class="nav-link">Главная</a></li>
+            <li><a href="technology.html" class="nav-link">Контент</a></li>
+            <li><a href="cad.html" class="nav-link">CAD models</a></li>
+            <li><a href="about.html" class="nav-link">О нас</a></li>
+            <li><a href="blog.html" class="nav-link">Блог</a></li>
+            <li><a href="contact.html" class="nav-link">Контакты</a></li>
+            <li>
+              <button id="signInButtonMobile" class="signin-button">
+                  <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+              </button>
+            </li>
+          </ul>
         </div>
     </div>
 
@@ -288,7 +281,7 @@
                         <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
                             <li class="active"><a href="index.html" class="nav-link">Главная</a></li>
                             <li><a href="technology.html" class="nav-link">Контент</a></li>
-                            <li><a href="404.html" class="nav-link">CAD models</a></li>
+                            <li><a href="cad.html" class="nav-link">CAD models</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -311,9 +304,6 @@
                             <li><a href="blog.html" class="nav-link">Блог</a></li>
                             <li><a href="contact.html" class="nav-link">Контакты</a></li>
                         </ul>
-                       <button id="signInButton" class="signin-button">
-                           <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
-                       </button>
                     </nav>
                 </div>
 
@@ -582,7 +572,7 @@
             </div>
         </div>
     </footer>
-
+   
     <div id="gtaClicker">
 
         <div id="clickerMenu">
@@ -595,11 +585,7 @@
             <div id="missionText">MISSION: Топ игроков получат призы от Robotek Rage на Central Asia</div>
             <div id="stats">
                 <div><span>RESPECT LEVEL</span><span class="stat-value" id="respectLevel">0</span></div>
-                <div><span>STATUS</span><span class="stat-value" id="status">ROOKIE</span></div>
-            </div>
-            <!-- Добавляем контейнер для ссылки на казино -->
-            <div id="casinoLinkContainer">
-                <a id="casinoLink" href="https://ignis76.github.io/Rage-Casino/index.html#" target="_blank">Теперь вы можете перейти в наше казино Robotek Casino</a>
+            <div><span>STATUS</span><span class="stat-value" id="status">ROOKIE</span></div>
             </div>
             <div id="notificationsContainer"></div>
         </div>
@@ -611,21 +597,20 @@
 
 </div>
 
-
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/owl.carousel.min.js"></script>
 <script src="js/jquery.sticky.js"></script>
 <script src="js/jquery.waypoints.min.js"></script>
 <script src="js/jquery.animateNumber.min.js"></script>
-<script src="js/jquery.fancybox.min.js"></script>
+<script src="js/jquery.fancybox.min.css"></script>
 <script src="js/jquery.easing.1.3.js"></script>
 <script src="js/aos.js"></script>
 
 <script src="js/main.js"></script>
+
 <script>
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
+  const firebaseConfig = {
         apiKey: "AIzaSyDaPh4tOyy8Q1QmYRf3WQBMwAOcyNCyGAA",
         authDomain: "robotek-rage.firebaseapp.com",
         projectId: "robotek-rage",
@@ -654,28 +639,11 @@
     }
     const auth = firebase.auth();
     const db = firebase.firestore();
-    const floatingButton = document.querySelector(".floating-button");
-    const clickerMenu = document.getElementById('clickerMenu');
-    const scoreDisplay = document.getElementById('score');
-    const scoreBar = document.getElementById('scoreBar');
-    const scoreBarContainer = document.getElementById('scoreBarContainer');
-    const clickButton = document.getElementById('clickButton');
-    const missionText = document.getElementById('missionText');
-    const respectLevelDisplay = document.getElementById('respectLevel');
-    const statusDisplay = document.getElementById('status');
-    const notificationsContainer = document.getElementById('notificationsContainer');
-    const casinoLink = document.getElementById('casinoLink'); // Получаем ссылку на казино
-    let score = 0;
-    let showMenu = false;
-    const MAX_SCORE = 100;
-    let lastClickTime = 0;
-    const clickDelay = 200;
     let isLoggedIn = false; // Track login status
-    const CASINO_THRESHOLD = 2500; // Порог кликов для отображения ссылки на казино
 
     // Function to update UI based on authentication state
     function updateSignInButton(user) {
-        const button = document.getElementById('signInButton');
+        const button = document.getElementById('signInButtonMobile'); // Получаем кнопку из мобильного меню
         isLoggedIn = !!user; // Update login status
         if (user) {
             button.innerHTML = `<i class="fas fa-sign-out-alt" style="color:white"></i>`;
@@ -684,7 +652,6 @@
             button.innerHTML = `<i class="fab fa-google" style="color:white"></i> Войти`;
             button.title = "Войти";
         }
-         floatingButton.style.display = 'flex';
     }
 
     // Check current auth state
@@ -695,55 +662,14 @@
         }
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Получаем элементы DOM
-        const mainNav = document.querySelector('.site-menu.main-menu');
-        const mobileMenuBody = document.querySelector('.site-mobile-menu-body .site-nav-wrap');
-        const signInButton = document.getElementById('signInButton');
-        const mobileMenu = document.querySelector('.site-mobile-menu');
-        const mobileMenuToggle = document.querySelector('.site-menu-toggle');
+    // Sign-in function
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('signin-button')) {
+            event.preventDefault();
 
-        // Функция для клонирования и добавления пунктов меню
-        function populateMobileMenu() {
-            if (mainNav && mobileMenuBody) {
-                // Очищаем мобильное меню
-                mobileMenuBody.innerHTML = '';
-
-                // Клонируем элементы основного меню
-                const clonedNav = mainNav.cloneNode(true);
-                mobileMenuBody.appendChild(clonedNav);
-
-                // Создаем кнопку входа в мобильном меню (если ее там нет)
-                if (signInButton) {
-                    const listItem = document.createElement('li');
-                    listItem.appendChild(signInButton.cloneNode(true)); // Клонируем кнопку, чтобы не переместить ее из desktop-меню
-                    mobileMenuBody.appendChild(listItem);
-                }
-            }
-        }
-
-        // Вызываем функцию для заполнения мобильного меню
-        populateMobileMenu();
-
-        // Вешаем обработчик события на родительский элемент (делегирование событий)
-        document.addEventListener('click', function(event) {
-            if (event.target.classList.contains('signin-button')) {
-                event.preventDefault();
-                handleSignInClick(); // Вызываем функцию обработки клика
-            }
-        });
-
-        // Обработчик touchstart
-        document.addEventListener('touchstart', function(event) {
-            if (event.target.classList.contains('signin-button')) {
-                event.preventDefault();
-            }
-        });
-
-	
-	//Функция для обработки входа
-	function handleSignInClick() {
-		if (!checkFirebaseConfiguration()) return;
+            const signInButton = event.target; // Определяем, на какую кнопку нажали
+            
+            if (!checkFirebaseConfiguration()) return;
             if (auth.currentUser) {
                 // Sign out
                 auth.signOut()
@@ -761,13 +687,16 @@
                 // Sign in
                 const provider = new firebase.auth.GoogleAuthProvider();
                 provider.setCustomParameters({
-                    prompt: 'select_account'
+                    prompt: 'select_account' // Force account selection
                 });
                 auth.signInWithPopup(provider)
                     .then((result) => {
+                        // User is signed in
                         const user = result.user;
                         console.log("User signed in:", user);
+                        // alert(`Welcome, ${user.displayName}!`); // Removed the alert
                         updateSignInButton(user);
+                        // Load data
                         loadData();
                     })
                     .catch((error) => {
@@ -782,134 +711,118 @@
                         alert("Sign-in failed: " + error.message);
                     });
             }
-	}
-
-    // Инициализация Firebase (если еще не инициализирована)
-    if (!firebase.apps.length) {
-        try {
-            firebase.initializeApp(firebaseConfig);
-        } catch (error) {
-            console.error("Firebase initialization error:", error);
         }
+    });
+
+    // Остальной код (кликер, загрузка данных и т.д.)
+    const floatingButton = document.querySelector(".floating-button");
+    const clickerMenu = document.getElementById('clickerMenu');
+    const scoreDisplay = document.getElementById('score');
+    const scoreBar = document.getElementById('scoreBar');
+    const clickBarContainer = document.getElementById('scoreBarContainer');
+    const clickButton = document.getElementById('clickButton');
+    const missionText = document.getElementById('missionText');
+
+    let score = 0;
+    let showMenu = false;
+    const MAX_SCORE = 100;
+    let lastClickTime = 0;
+    const clickDelay = 200;
+
+    function toggleClickerMenu() {
+        showMenu = !showMenu;
+        clickerMenu.classList.toggle('show');
     }
 
-	
-    // NEW CLICKER JS - functions for RESPECT
-        function toggleClickerMenu() {
-            showMenu = !showMenu;
-            clickerMenu.classList.toggle('show');
-        }
-        
-        floatingButton.addEventListener('click', toggleClickerMenu);
+    floatingButton.addEventListener('click', toggleClickerMenu);
 
-         //Function to save data to firestore
-         function saveData() {
-            if (!isLoggedIn) return;
-            db.collection("users").doc(auth.currentUser.uid).set({
-                 score: score
-            })
-         .then(() => console.log("Data saved successfully!"))
-             .catch((error) => console.error("Error saving data:", error));
-        }
+    //Function to save data to firestore
+    function saveData() {
+        if (!isLoggedIn) return;
+        db.collection("users").doc(auth.currentUser.uid).set({
+            score: score
+        })
+            .then(() => console.log("Data saved successfully!"))
+            .catch((error) => console.error("Error saving data:", error));
+    }
+
     function loadData() {
         if (!isLoggedIn) {
-             resetClicker();
-                return;
-          }
-           db.collection("users").doc(auth.currentUser.uid).get()
-                .then((doc) => {
-                   if (doc.exists) {
-                        score = doc.data().score || 0;
-                       updateScore();
-                         console.log("Data loaded successfully:", score);
-                   } else {
-                      console.log("No data found, setting to 0");
-                      resetClicker();
-                        saveData();
-                   }
-           })
-           .catch((error) => console.error("Error loading data:", error));
+            resetClicker();
+            return;
+        }
+        db.collection("users").doc(auth.currentUser.uid).get()
+            .then((doc) => {
+                if (doc.exists) {
+                    score = doc.data().score || 0;
+                    updateScore();
+                    console.log("Data loaded successfully:", score);
+                } else {
+                    console.log("No data found, setting to 0");
+                    resetClicker();
+                    saveData();
+                }
+            })
+            .catch((error) => console.error("Error loading data:", error));
     }
-     // Close click
-         // Close clicker menu on outside click
-         document.addEventListener('click', function(event) {
-            const isClickInsideMenu = clickerMenu.contains(event.target) || floatingButton.contains(event.target);
-            if (!isClickInsideMenu && clickerMenu.classList.contains('show')) {
-                 toggleClickerMenu();
-            }
-        });
-        
-          function updateScore() {
-            scoreDisplay.textContent = score;
-            const percentage = Math.min((score / MAX_SCORE) * 100, 100);
-            scoreBar.style.width = `${percentage}%`;
-            scoreBarContainer.style.setProperty('--scorePercentage', `${percentage}%`);
 
-            const respectLevel = Math.floor(score / 10);
-            respectLevelDisplay.textContent = respectLevel;
-
-            let status = 'ROOKIE';
-            if (score >= 10 && score < 50) {
-                status = 'THUG';
-            } else if (score >= 50) {
-                status = 'KINGPIN';
-            }
-            statusDisplay.textContent = status;
-
-             // Show casino link if score exceeds threshold
-            if (score >= CASINO_THRESHOLD) {
-                casinoLink.style.display = 'block';
-            } else {
-                casinoLink.style.display = 'none';
-            }
+    // Close clicker menu on outside click
+    document.addEventListener('click', function(event) {
+        const isClickInsideMenu = clickerMenu.contains(event.target) || floatingButton.contains(event.target);
+        if (!isClickInsideMenu && clickerMenu.classList.contains('show')) {
+            toggleClickerMenu();
         }
+    });
 
-        function handleClick() {
-            score++;
-            updateScore();
-            saveData()
-            createNotification();
-        }
+    function updateScore() {
+        scoreDisplay.textContent = score;
+        const percentage = Math.min((score / MAX_SCORE) * 100, 100);
+        scoreBar.style.width = `${percentage}%`;
+    }
 
-        function createNotification() {
-            const notification = document.createElement('div');
-            notification.classList.add('notification');
-            notification.textContent = '+RESPECT';
+    function handleClick() {
+        score++;
+        updateScore();
+        saveData();
+        createNotification();
+    }
 
-            const offsetX = Math.random() * 40 - 20;
-            const offsetY = Math.random() * 20 - 10;
 
-            notification.style.setProperty('--offsetX', `${offsetX}px`);
-            notification.style.setProperty('--offsetY', `${offsetY}px`);
-            notificationsContainer.appendChild(notification);
+    function createNotification() {
+        const notification = document.createElement('div');
+        notification.classList.add('notification');
+        notification.textContent = '+RESPECT';
 
-            setTimeout(() => {
-                notification.remove();
-            }, 1000);
-        }
+        const offsetX = Math.random() * 40 - 20;
+        const offsetY = Math.random() * 20 - 10;
 
-        clickButton.addEventListener('click', addPoint);
-          
-      // OLD CLICKER  FUNCTION
-     function resetClicker() {
-            score = 0;
-           updateScore();
-            saveData();
-       }
-       
-     function addPoint() {
-      if (!isLoggedIn) {
+        notification.style.setProperty('--offsetX', `${offsetX}px`);
+        notification.style.setProperty('--offsetY', `${offsetY}px`);
+        notificationsContainer.appendChild(notification);
+
+        setTimeout(() => {
+            notification.remove();
+        }, 1000);
+    }
+
+    function addPoint() {
+        if (!isLoggedIn) {
             alert("Пожалуйста, войдите в аккаунт, чтобы кликать!");
             return;
         }
 
         const now = Date.now();
         if (now - lastClickTime > clickDelay) {
-           handleClick()
+            handleClick();
             lastClickTime = now;
         }
     }
-});
+    function resetClicker() {
+        score = 0;
+        updateScore();
+        saveData();
+    }
+
 </script>
 </body>
 </html>
