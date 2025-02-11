@@ -273,7 +273,9 @@
             </div>
         </div>
         <div class="site-mobile-menu-body">
-            <ul class="site-nav-wrap"></ul> <!-- Очищаем содержимое -->
+            <ul class="site-nav-wrap">
+                <!-- Пункты меню будут добавлены сюда с помощью JavaScript -->
+            </ul>
         </div>
     </div>
 
@@ -308,6 +310,13 @@
                             <li><a href="about.html" class="nav-link">О нас</a></li>
                             <li><a href="blog.html" class="nav-link">Блог</a></li>
                             <li><a href="contact.html" class="nav-link">Контакты</a></li>
+                            <li>
+                                <a href="#" id="signInButton" class="nav-link" title="Войти">
+                                    <button class="signin-button">
+                                        <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+                                    </button>
+                                </a>
+                            </li>
                         </ul>
                     </nav>
                 </div>
@@ -664,7 +673,8 @@
     let showMenu = false;
     const MAX_SCORE = 100;
     let lastClickTime = 0;
-    const clickDelay = 200;    let isLoggedIn = false; // Track login status
+    const clickDelay = 200;
+    let isLoggedIn = false; // Track login status
     const CASINO_THRESHOLD = 2500; // Порог кликов для отображения ссылки на казино
 	
 	
@@ -691,32 +701,23 @@
     });
 	
 	document.addEventListener('DOMContentLoaded', function() {
-		const mainNav = document.querySelector('.site-menu.main-menu'); // Находим основное меню
-		const mobileMenuBody = document.querySelector('.site-mobile-menu-body .site-nav-wrap'); // Находим контейнер мобильного меню
-		const signInButton = document.getElementById('signInButton'); // Находим кнопку "Войти"
+		const mainNav = document.querySelector('.site-menu.main-menu');
+		const mobileMenuBody = document.querySelector('.site-mobile-menu-body .site-nav-wrap');
+		const signInButton = document.getElementById('signInButton');
 
 		if (mainNav && mobileMenuBody) {
-			// Клонируем пункты из основного меню в мобильное
 			const clonedNav = mainNav.cloneNode(true);
 			mobileMenuBody.appendChild(clonedNav);
 		}
 
-		// Переносим кнопку "Войти" в мобильное меню
-		if (signInButton && mobileMenuBody) {
-			const listItem = document.createElement('li'); // Создаем элемент списка
-			listItem.appendChild(signInButton); // Помещаем кнопку в элемент списка
-			mobileMenuBody.appendChild(listItem); // Добавляем элемент списка в мобильное меню
-		}
-    // Находим все кнопки "Войти" (в основном меню и мобильном меню)
-    const signInButtons = document.querySelectorAll('.signin-button');
 
+	const signInButtons = document.querySelectorAll('.signin-button');
     signInButtons.forEach(signInButton => {
         if (signInButton) {
             signInButton.addEventListener('click', function(event) {
-                event.preventDefault(); // Предотвратить отправку формы
+                event.preventDefault();
                 if (!checkFirebaseConfiguration()) return;
                 if (auth.currentUser) {
-                    // Sign out
                     auth.signOut()
                         .then(() => {
                             console.log('User signed out');
@@ -729,14 +730,12 @@
                             alert(errorMessage);
                         });
                 } else {
-                    // Sign in
                     const provider = new firebase.auth.GoogleAuthProvider();
                     provider.setCustomParameters({
-                        prompt: 'select_account' // Force account selection
+                        prompt: 'select_account'
                     });
                     auth.signInWithPopup(provider)
                         .then((result) => {
-                            // User is signed in
                             const user = result.user;
                             console.log("User signed in:", user);
                             updateSignInButton(user);
@@ -764,8 +763,7 @@
             console.error("Element with class 'signin-button' not found.");
         }
     });
-	});
-
+});
 
     // NEW CLICKER JS
         function toggleClickerMenu() {
