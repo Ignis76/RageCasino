@@ -280,7 +280,7 @@
 
                 <div class="col-lg-4">
                     <nav class="site-navigation text-right ml-auto " role="navigation">
-                        <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
+                        <ul class="site-menu main-menu  ml-auto d-none d-lg-block">
                             <li class="active"><a href="index.html" class="nav-link">Главная</a></li>
                             <li><a href="technology.html" class="nav-link">Контент</a></li>
                             <li><a href="cad.html" class="nav-link">CAD models</a></li>
@@ -301,7 +301,7 @@
 
                 <div class="col-lg-4">
                     <nav class="site-navigation text-left mr-auto " role="navigation">
-                        <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
+                        <ul class="site-menu main-menu ml-auto d-none d-lg-block">
                             <li><a href="about.html" class="nav-link">О нас</a></li>
                             <li><a href="blog.html" class="nav-link">Блог</a></li>
                             <li><a href="contact.html" class="nav-link">Контакты</a></li>
@@ -739,12 +739,34 @@
                     }
                     alert(errorMessage);
                     console.error("Sign-in error:", error);
-                    alert("Sign-in failed: " + error.message);
-                });
+                    alert("Sign-in failed: " + error.message);                });
         }
     }
-    signInButton.addEventListener('click', handleSignInClick);
-    mobileSignInButton.addEventListener('click', handleSignInClick);
+
+    //NEW LOGIC AVOID DUPES
+        const mainMenuItems = document.querySelectorAll('.site-menu.main-menu > li');
+        const mobileMenuBody = document.querySelector('.site-mobile-menu-body');
+        const mobileNavWrap = document.createElement('ul');
+        mobileNavWrap.classList.add('site-nav-wrap');
+
+        mainMenuItems.forEach(item => {
+        const clonedItem = item.cloneNode(true);
+            mobileNavWrap.appendChild(clonedItem);
+        });
+         const mobileSignInLi = document.createElement('li');
+            mobileSignInLi.innerHTML = `<a href="#" id="mobileSignInButton" title="Войти">
+                                            <button class="signin-button">
+                                                <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+                                            </button>
+                                        </a>`;
+            mobileNavWrap.appendChild(mobileSignInLi);
+            mobileMenuBody.appendChild(mobileNavWrap);
+
+        signInButton.addEventListener('click', handleSignInClick);
+        document.getElementById('mobileSignInButton').addEventListener('click', handleSignInClick);
+
+
+
 
     // NEW CLICKER JS
         function toggleClickerMenu() {
@@ -856,6 +878,25 @@
            handleClick()
             lastClickTime = now;
         }
+    }
+    function updateSignInButton(user) {
+        const button = document.getElementById('signInButton');
+        const mobileButton = document.getElementById('mobileSignInButton');
+        isLoggedIn = !!user;
+
+        const updateButtonContent = (btn, isMobile = false) => {
+            if (user) {
+                btn.innerHTML = `<i class="fas fa-sign-out-alt" style="color:white"></i>`;
+                btn.title = "Выйти";
+            } else {
+                btn.innerHTML = `<i class="fab fa-google" style="color:white"></i> Войти`;
+                btn.title = "Войти";
+            }
+        };
+
+        updateButtonContent(button);
+        updateButtonContent(mobileButton, true);
+        floatingButton.style.display = 'flex';
     }
 </script>
 </body>
