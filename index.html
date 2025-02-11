@@ -272,7 +272,21 @@
                 <span class="icon-close2 js-menu-toggle"></span>
             </div>
         </div>
-        <div class="site-mobile-menu-body"></div>
+        <div class="site-mobile-menu-body">
+            <ul class="site-nav-wrap"> <!-- Добавим обертку для списка -->
+                <li><a href="index.html" class="nav-link">Главная</a></li>
+                <li><a href="technology.html" class="nav-link">Контент</a></li>
+                <li><a href="404.html" class="nav-link">CAD models</a></li>
+                <li><a href="about.html" class="nav-link">О нас</a></li>
+                <li><a href="blog.html" class="nav-link">Блог</a></li>
+                <li><a href="contact.html" class="nav-link">Контакты</a></li>
+                <li>
+                     <button id="signInButton" class="signin-button">
+                         <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+                     </button>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <header class="site-navbar site-navbar-target" role="banner">
@@ -695,60 +709,63 @@
     });
 	
 	document.addEventListener('DOMContentLoaded', function() {
-    const signInButton = document.getElementById('signInButton');
+    // Находим все кнопки "Войти" (в основном меню и мобильном меню)
+    const signInButtons = document.querySelectorAll('.signin-button');
 
-    if (signInButton) {
-        signInButton.addEventListener('click', function(event) {
-            event.preventDefault(); // Предотвратить отправку формы
-            if (!checkFirebaseConfiguration()) return;
-            if (auth.currentUser) {
-                // Sign out
-                auth.signOut()
-                    .then(() => {
-                        console.log('User signed out');
-                        updateSignInButton(null);
-                        resetClicker();
-                    })
-                    .catch((error) => {
-                        console.error('Sign-out error:', error);
-                        let errorMessage = "Sign-out failed.";
-                        alert(errorMessage);
+    signInButtons.forEach(signInButton => {
+        if (signInButton) {
+            signInButton.addEventListener('click', function(event) {
+                event.preventDefault(); // Предотвратить отправку формы
+                if (!checkFirebaseConfiguration()) return;
+                if (auth.currentUser) {
+                    // Sign out
+                    auth.signOut()
+                        .then(() => {
+                            console.log('User signed out');
+                            updateSignInButton(null);
+                            resetClicker();
+                        })
+                        .catch((error) => {
+                            console.error('Sign-out error:', error);
+                            let errorMessage = "Sign-out failed.";
+                            alert(errorMessage);
+                        });
+                } else {
+                    // Sign in
+                    const provider = new firebase.auth.GoogleAuthProvider();
+                    provider.setCustomParameters({
+                        prompt: 'select_account' // Force account selection
                     });
-            } else {
-                // Sign in
-                const provider = new firebase.auth.GoogleAuthProvider();
-                provider.setCustomParameters({
-                    prompt: 'select_account' // Force account selection
-                });
-                auth.signInWithPopup(provider)
-                    .then((result) => {
-                        // User is signed in
-                        const user = result.user;
-                        console.log("User signed in:", user);
-                        updateSignInButton(user);
-                        loadData();
-                    })
-                    .catch((error) => {
-                        let errorMessage = "Sign-in failed.";
-                        if (error.code === 'auth/popup-closed-by-user') {
-                            errorMessage = "Sign-in popup was closed.";
-                        } else if (error.code === 'auth/unauthorized-domain') {
-                            errorMessage = "This domain is not authorized.  Please authorize it in the Firebase console.";
-                        }
-                        alert(errorMessage);
-                        console.error("Sign-in error:", error);
-                        alert("Sign-in failed: " + error.message);
-                    });
-            }
-        });
+                    auth.signInWithPopup(provider)
+                        .then((result) => {
+                            // User is signed in
+                            const user = result.user;
+                            console.log("User signed in:", user);
+                            updateSignInButton(user);
+                            loadData();
+                        })
+                        .catch((error) => {
+                            let errorMessage = "Sign-in failed.";
+                            if (error.code === 'auth/popup-closed-by-user') {
+                                errorMessage = "Sign-in popup was closed.";
+                            } else if (error.code === 'auth/unauthorized-domain') {
+                                errorMessage = "This domain is not authorized.  Please authorize it in the Firebase console.";
+                            }
+                            alert(errorMessage);
+                            console.error("Sign-in error:", error);
+                            alert("Sign-in failed: " + error.message);
+                        });
+                }
+            });
 
-        signInButton.addEventListener('touchstart', function(event) {
-            event.preventDefault();
-        });
+            signInButton.addEventListener('touchstart', function(event) {
+                event.preventDefault();
+            });
 
-    } else {
-        console.error("Element with class 'signin-button' not found.");
-    }
+        } else {
+            console.error("Element with class 'signin-button' not found.");
+        }
+    });
 	});
 
 
@@ -757,7 +774,7 @@
             showMenu = !showMenu;
             clickerMenu.classList.toggle('show');
         }
-            
+        
         floatingButton.addEventListener('click', toggleClickerMenu);
 
          //Function to save data to firestore
