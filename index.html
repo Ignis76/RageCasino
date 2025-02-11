@@ -583,10 +583,6 @@
             </div>
             <button id="clickButton">EARN RESPECT</button>
             <div id="missionText">MISSION: Топ игроков получат призы от Robotek Rage на Central Asia</div>
-            <div id="stats">
-                <div><span>RESPECT LEVEL</span><span class="stat-value" id="respectLevel">0</span></div>
-            <div><span>STATUS</span><span class="stat-value" id="status">ROOKIE</span></div>
-            </div>
             <div id="notificationsContainer"></div>
         </div>
 
@@ -608,7 +604,6 @@
 <script src="js/aos.js"></script>
 
 <script src="js/main.js"></script>
-
 <script>
   const firebaseConfig = {
         apiKey: "AIzaSyDaPh4tOyy8Q1QmYRf3WQBMwAOcyNCyGAA",
@@ -638,12 +633,11 @@
         alert("Firebase initialization error: " + error.message);
     }
     const auth = firebase.auth();
-    const db = firebase.firestore();
-    let isLoggedIn = false; // Track login status
+      let isLoggedIn = false;
 
     // Function to update UI based on authentication state
     function updateSignInButton(user) {
-        const button = document.getElementById('signInButtonMobile'); // Получаем кнопку из мобильного меню
+        const button = document.getElementById('signInButtonMobile');
         isLoggedIn = !!user; // Update login status
         if (user) {
             button.innerHTML = `<i class="fas fa-sign-out-alt" style="color:white"></i>`;
@@ -657,47 +651,43 @@
     // Check current auth state
     auth.onAuthStateChanged((user) => {
         updateSignInButton(user);
-        if (user) {
-            loadData();
-        }
     });
 
-    // Sign-in function
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('signin-button')) {
-            event.preventDefault();
+    document.addEventListener('DOMContentLoaded', function() {
+        // Получаем элементы DOM
+        const mobileMenuBody = document.querySelector('.site-mobile-menu-body .site-nav-wrap');
 
-            const signInButton = event.target; // Определяем, на какую кнопку нажали
-            
+        // Обработчик клика по кнопке "Войти"
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('signin-button')) {
+                event.preventDefault();
+                handleSignInClick();
+            }
+        });
+
+        // Функция для обработки входа
+        function handleSignInClick() {
             if (!checkFirebaseConfiguration()) return;
             if (auth.currentUser) {
-                // Sign out
                 auth.signOut()
                     .then(() => {
                         console.log('User signed out');
                         updateSignInButton(null);
-                        resetClicker();
                     })
                     .catch((error) => {
                         console.error('Sign-out error:', error);
-                        let errorMessage = "Sign-out failed.";
-                        alert(errorMessage);
+                        alert('Sign-out failed.');
                     });
             } else {
-                // Sign in
                 const provider = new firebase.auth.GoogleAuthProvider();
                 provider.setCustomParameters({
-                    prompt: 'select_account' // Force account selection
+                    prompt: 'select_account'
                 });
                 auth.signInWithPopup(provider)
                     .then((result) => {
-                        // User is signed in
                         const user = result.user;
-                        console.log("User signed in:", user);
-                        // alert(`Welcome, ${user.displayName}!`); // Removed the alert
+                        console.log('User signed in:', user);
                         updateSignInButton(user);
-                        // Load data
-                        loadData();
                     })
                     .catch((error) => {
                         let errorMessage = "Sign-in failed.";
@@ -707,14 +697,63 @@
                             errorMessage = "This domain is not authorized.  Please authorize it in the Firebase console.";
                         }
                         alert(errorMessage);
-                        console.error("Sign-in error:", error);
-                        alert("Sign-in failed: " + error.message);
+                        console.error('Sign-in error:', error);
+                        alert('Sign-in failed: ' + error.message);
                     });
             }
         }
+        
+                if (!firebase.apps.length) {
+        try {
+            firebase.initializeApp(firebaseConfig);
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+    }
+       
+
+	   // Функция для клонирования пунктов меню и кнопки "Войти"
+	   function populateMobileMenu() {
+            if (mobileMenuBody) {
+                // Очищаем мобильное меню
+                mobileMenuBody.innerHTML = '';
+
+                // Задаём массив с пунктами меню и ссылками
+                const menuItems = [
+                    { text: 'Главная', link: 'index.html' },
+                    { text: 'Контент', link: 'technology.html' },
+                    { text: 'CAD models', link: 'cad.html' },
+                    { text: 'О нас', link: 'about.html' },
+                    { text: 'Блог', link: 'blog.html' },
+                    { text: 'Контакты', link: 'contact.html' }
+                ];
+	
+				// Создаем и добавляем пункты меню
+				menuItems.forEach(item => {
+					const listItem = document.createElement('li');
+					const link = document.createElement('a');
+					link.href = item.link;
+					link.className = 'nav-link';
+					link.textContent = item.text;
+					listItem.appendChild(link);
+					mobileMenuBody.appendChild(listItem);
+				});
+	
+			    // Создаем кнопку "Войти"
+				const listItem = document.createElement('li');
+				listItem.innerHTML = `
+					<button id="signInButtonMobile" class="signin-button">
+						<i class="fab fa-google" style="color:white; flex-shrink: 0;"></i>
+					</button>`;
+				mobileMenuBody.appendChild(listItem);
+			}
+	   }
+	
+		// Заполняем мобильное меню
+		populateMobileMenu();
     });
 
-    // Остальной код (кликер, загрузка данных и т.д.)
+    
     const floatingButton = document.querySelector(".floating-button");
     const clickerMenu = document.getElementById('clickerMenu');
     const scoreDisplay = document.getElementById('score');
@@ -722,21 +761,19 @@
     const clickBarContainer = document.getElementById('scoreBarContainer');
     const clickButton = document.getElementById('clickButton');
     const missionText = document.getElementById('missionText');
-
-    let score = 0;
+     let score = 0;
     let showMenu = false;
     const MAX_SCORE = 100;
     let lastClickTime = 0;
     const clickDelay = 200;
 
-    function toggleClickerMenu() {
-        showMenu = !showMenu;
-        clickerMenu.classList.toggle('show');
-    }
+        function toggleClickerMenu() {
+            showMenu = !showMenu;
+            clickerMenu.classList.toggle('show');
+        }
 
-    floatingButton.addEventListener('click', toggleClickerMenu);
+        floatingButton.addEventListener('click', toggleClickerMenu);
 
-    //Function to save data to firestore
     function saveData() {
         if (!isLoggedIn) return;
         db.collection("users").doc(auth.currentUser.uid).set({
@@ -783,7 +820,7 @@
     function handleClick() {
         score++;
         updateScore();
-        saveData();
+        saveData(); // Здесь вызываем saveData после того, как она определена
         createNotification();
     }
 
@@ -822,7 +859,6 @@
         updateScore();
         saveData();
     }
-
 </script>
 </body>
 </html>
