@@ -207,7 +207,6 @@
 
         #stats .stat-value {
             color: #FFDA63;
-            text-align: left
         }
 
         #notificationsContainer {
@@ -242,21 +241,6 @@
             background-color: #2B2B2B;
             width: calc(100% - var(--scorePercentage, 0%));
         }
-        /* signin-button */
-        .signin-button {
-            background-color: #007BFF; /* Синий цвет */
-            color: white; /* Белый текст */
-            padding: 10px 20px; /* Отступы */
-            border: none; /* Убираем рамку */
-            border-radius: 5px; /* Скругление углов */
-            cursor: pointer; /* Изменяем курсор при наведении */
-            transition: background-color 0.3s ease; /* Плавный переход цвета */
-            margin-left: 5px;
-            display: flex;
-            align-items: center;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
     </style>
 
 </head>
@@ -272,19 +256,21 @@
             </div>
         </div>
         <div class="site-mobile-menu-body">
-          <ul class="site-nav-wrap">
-            <li><a href="index.html" class="nav-link">Главная</a></li>
-            <li><a href="technology.html" class="nav-link">Контент</a></li>
-            <li><a href="cad.html" class="nav-link">CAD models</a></li>
-            <li><a href="about.html" class="nav-link">О нас</a></li>
-            <li><a href="blog.html" class="nav-link">Блог</a></li>
-            <li><a href="contact.html" class="nav-link">Контакты</a></li>
-            <li>
-              <button id="signInButtonMobile" class="signin-button">
-                  <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
-              </button>
-            </li>
-          </ul>
+           <ul class="site-nav-wrap">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="technology.html">Контент</a></li>
+                <li><a href="cad.html">CAD models</a></li>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="blog.html">Блог</a></li>
+                <li><a href="contact.html">Контакты</a></li>
+                <li>
+                    <a href="#" id="mobileSignInButton" title="Войти">
+                        <button class="signin-button">
+                            <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+                        </button>
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 
@@ -319,6 +305,13 @@
                             <li><a href="about.html" class="nav-link">О нас</a></li>
                             <li><a href="blog.html" class="nav-link">Блог</a></li>
                             <li><a href="contact.html" class="nav-link">Контакты</a></li>
+                            <li>
+                                <a href="#" id="signInButton" class="nav-link" title="Войти">
+                                    <button class="signin-button">
+                                        <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+                                    </button>
+                                </a>
+                            </li>
                         </ul>
                     </nav>
                 </div>
@@ -334,10 +327,7 @@
                     <div class="col-lg-7 text-center">
                         <h1 data-aos="fade-up" data-aos-delay="0">Мы команда Robotek</h1>
                         <p data-aos="fade-up" data-aos-delay="100">Наш девиз не обосраться!</p>
-                        <p data-aos="fade-up" data-aos-delay="200">
-                            <a href="technology.html" class="btn primary-outline-white--hover">Наши уроки</a>
-
-                        </p>
+                        <p data-aos="fade-up" data-aos-delay="200"><a href="technology.html" class="btn primary-outline-white--hover">Наши уроки</a></p>
                     </div>
                 </div>
             </div>
@@ -591,7 +581,7 @@
             </div>
         </div>
     </footer>
-   
+
     <div id="gtaClicker">
 
         <div id="clickerMenu">
@@ -615,6 +605,7 @@
     </div>
 
 </div>
+
 
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
@@ -658,6 +649,8 @@
     }
     const auth = firebase.auth();
     const db = firebase.firestore();
+    const signInButton = document.getElementById('signInButton');
+    const mobileSignInButton = document.getElementById('mobileSignInButton');  // Получаем кнопку из мобильного меню
     const floatingButton = document.querySelector(".floating-button");
     const clickerMenu = document.getElementById('clickerMenu');
     const scoreDisplay = document.getElementById('score');
@@ -673,18 +666,24 @@
     const MAX_SCORE = 100;
     let lastClickTime = 0;
     const clickDelay = 200;
-    let isLoggedIn = false;
-	const CASINO_THRESHOLD = 2500; 
-    // Track login status
-       function updateSignInButton(user) {
-        const button = document.getElementById('signInButtonMobile'); // Fixed query selector
+    let isLoggedIn = false; // Track login status
+
+
+    // Function to update UI based on authentication state
+    function updateSignInButton(user) {
+        const button = document.getElementById('signInButton');
+        const mobileButton = document.getElementById('mobileSignInButton'); // Получаем кнопку из мобильного меню
         isLoggedIn = !!user; // Update login status
         if (user) {
             button.innerHTML = `<i class="fas fa-sign-out-alt" style="color:white"></i>`;
             button.title = "Выйти";
+            mobileButton.innerHTML = `<i class="fas fa-sign-out-alt" style="color:white"></i>`; // Обновляем мобильную кнопку
+            mobileButton.title = "Выйти";
         } else {
             button.innerHTML = `<i class="fab fa-google" style="color:white"></i> Войти`;
             button.title = "Войти";
+             mobileButton.innerHTML = `<i class="fab fa-google" style="color:white"></i> Войти`; // Обновляем мобильную кнопку
+             mobileButton.title = "Войти";
         }
          floatingButton.style.display = 'flex';
     }
@@ -696,13 +695,17 @@
             loadData();
         }
     });
-	function handleSignInClick() {
-      if (!checkFirebaseConfiguration()) return;
+
+
+    // Sign-in function
+    function handleSignInClick() {
+        if (!checkFirebaseConfiguration()) return;
         if (auth.currentUser) {
             // Sign out
             auth.signOut()
-                .then(() =>{
+                .then(() => {
                     console.log('User signed out');
+                    //  alert('You have been signed out.'); // Removed the alert
                     updateSignInButton(null);
                     resetClicker();
                 })
@@ -722,7 +725,9 @@
                     // User is signed in
                     const user = result.user;
                     console.log("User signed in:", user);
+                    // alert(`Welcome, ${user.displayName}!`); // Removed the alert
                     updateSignInButton(user);
+                    // Load data
                     loadData();
                 })
                 .catch((error) => {
@@ -734,66 +739,19 @@
                     }
                     alert(errorMessage);
                     console.error("Sign-in error:", error);
-                    alert("Sign-in failed: " + error.message);
+                    alert("Sign-in failed: ": " + error.message);
                 });
         }
-	}
-
-	  document.addEventListener('click', function(event) {
-		if (event.target.classList.contains('signin-button')) {
-			event.preventDefault(); // Prevent the default action
-			handleSignInClick();
-		}
-    });
-
-	document.addEventListener('DOMContentLoaded', function() {
-    // Получаем элементы DOM
-
-        // Заполняем мобильное меню
-	   function populateMobileMenu() {
-		   const mobileMenuBody = document.querySelector('.site-mobile-menu-body .site-nav-wrap');
-	       mobileMenuBody.innerHTML = '';
-                // Задаём массив с пунктами меню и ссылками
-                const menuItems = [
-                    { text: 'Главная', link: 'index.html' },
-                    { text: 'Контент', link: 'technology.html' },
-                    { text: 'CAD models', link: 'cad.html' },
-                    { text: 'О нас', link: 'about.html' },
-                    { text: 'Блог', link: 'blog.html' },
-                    { text: 'Контакты', link: 'contact.html' }
-                ];
-	
-				// Создаем и добавляем пункты меню
-				menuItems.forEach(item => {
-					const listItem = document.createElement('li');
-					const link = document.createElement('a');
-					link.href = item.link;
-					link.className = 'nav-link';
-					link.textContent = item.text;
-					listItem.appendChild(link);
-					mobileMenuBody.appendChild(listItem);
-				});
-	
-			    // Создаем кнопку "Войти"
-				const listItem = document.createElement('li');
-				listItem.innerHTML = `
-					<button id="signInButtonMobile" class="signin-button">
-						<i class="fab fa-google" style="color:white; flex-shrink: 0;"></i>
-					</button>`;
-				mobileMenuBody.appendChild(listItem);
-			 updateSignInButton();
     }
-	
-		// Заполняем мобильное меню
-		populateMobileMenu();
-
-    });
+    signInButton.addEventListener('click', handleSignInClick);
+    mobileSignInButton.addEventListener('click', handleSignInClick);
 
     // NEW CLICKER JS
         function toggleClickerMenu() {
             showMenu = !showMenu;
             clickerMenu.classList.toggle('show');
         }
+
 
         floatingButton.addEventListener('click', toggleClickerMenu);
 
@@ -841,7 +799,7 @@
                  toggleClickerMenu();
             }
         });
-        
+
           function updateScore() {
             scoreDisplay.textContent = score;
             const percentage = Math.min((score / MAX_SCORE) * 100, 100);
@@ -879,14 +837,14 @@
         }
 
         clickButton.addEventListener('click', addPoint);
-          
+
       // OLD CLICKER  FUNCTION
      function resetClicker() {
             score = 0;
            updateScore();
             saveData();
        }
-       
+
      function addPoint() {
       if (!isLoggedIn) {
             alert("Пожалуйста, войдите в аккаунт, чтобы кликать!");
