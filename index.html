@@ -123,7 +123,7 @@
             border: 2px solid #FFDA63;
             transition: all 0.3s ease;
             display: none; /* Изначально скрываем */
-            margin-bottom: 16px; /* Отступ от меню до кнопки */
+            margin-bottom: 16px; /* Отступ от кнопки до меню */
         }
 
         #clickerMenu.show {
@@ -273,19 +273,7 @@
             </div>
         </div>
         <div class="site-mobile-menu-body">
-            <ul class="site-nav-wrap"> <!-- Добавим обертку для списка -->
-                <li><a href="index.html" class="nav-link">Главная</a></li>
-                <li><a href="technology.html" class="nav-link">Контент</a></li>
-                <li><a href="404.html" class="nav-link">CAD models</a></li>
-                <li><a href="about.html" class="nav-link">О нас</a></li>
-                <li><a href="blog.html" class="nav-link">Блог</a></li>
-                <li><a href="contact.html" class="nav-link">Контакты</a></li>
-                <li>
-                     <button id="signInButton" class="signin-button">
-                         <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
-                     </button>
-                </li>
-            </ul>
+            <ul class="site-nav-wrap"></ul> <!-- Очищаем содержимое -->
         </div>
     </div>
 
@@ -320,11 +308,6 @@
                             <li><a href="about.html" class="nav-link">О нас</a></li>
                             <li><a href="blog.html" class="nav-link">Блог</a></li>
                             <li><a href="contact.html" class="nav-link">Контакты</a></li>
-                            <li>
-                                 <button id="signInButton" class="signin-button">
-                                        <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
-                                    </button>
-                            </li>
                         </ul>
                     </nav>
                 </div>
@@ -681,8 +664,7 @@
     let showMenu = false;
     const MAX_SCORE = 100;
     let lastClickTime = 0;
-    const clickDelay = 200;
-    let isLoggedIn = false; // Track login status
+    const clickDelay = 200;    let isLoggedIn = false; // Track login status
     const CASINO_THRESHOLD = 2500; // Порог кликов для отображения ссылки на казино
 	
 	
@@ -709,6 +691,22 @@
     });
 	
 	document.addEventListener('DOMContentLoaded', function() {
+		const mainNav = document.querySelector('.site-menu.main-menu'); // Находим основное меню
+		const mobileMenuBody = document.querySelector('.site-mobile-menu-body .site-nav-wrap'); // Находим контейнер мобильного меню
+		const signInButton = document.getElementById('signInButton'); // Находим кнопку "Войти"
+
+		if (mainNav && mobileMenuBody) {
+			// Клонируем пункты из основного меню в мобильное
+			const clonedNav = mainNav.cloneNode(true);
+			mobileMenuBody.appendChild(clonedNav);
+		}
+
+		// Переносим кнопку "Войти" в мобильное меню
+		if (signInButton && mobileMenuBody) {
+			const listItem = document.createElement('li'); // Создаем элемент списка
+			listItem.appendChild(signInButton); // Помещаем кнопку в элемент списка
+			mobileMenuBody.appendChild(listItem); // Добавляем элемент списка в мобильное меню
+		}
     // Находим все кнопки "Войти" (в основном меню и мобильном меню)
     const signInButtons = document.querySelectorAll('.signin-button');
 
