@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,9 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-          integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link rel="stylesheet" href="fonts/icomoon/style.css">
 
@@ -190,6 +187,7 @@
             color: #A1A1AA;
             margin-top: 0.5em;
             font-size: 0.8em;
+            /* NEW CLICKER JS */
         }
 
         #stats {
@@ -244,33 +242,6 @@
             background-color: #2B2B2B;
             width: calc(100% - var(--scorePercentage, 0%));
         }
-
-        .site-mobile-menu-body .site-menu {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-
-        .site-mobile-menu-body .site-menu li {
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .site-mobile-menu-body .site-menu li a {
-            display: block;
-            padding: 10px 20px;
-            color: #fff;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-
-        .site-mobile-menu-body .site-menu li a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        #signInButtonMobile {
-            margin-bottom: 10px;
-        }
     </style>
 
 </head>
@@ -286,26 +257,19 @@
             </div>
         </div>
         <div class="site-mobile-menu-body">
-            <ul class="site-menu main-menu js-clone-nav d-lg-none">
-                <li><a href="index.html" class="nav-link">Главная</a></li>
-                <li><a href="technology.html" class="nav-link">Контент</a></li>
-                <li><a href="cad.html" class="nav-link">CAD models</a></li>
-                <li><a href="about.html" class="nav-link">О нас</a></li>
-                <li><a href="blog.html" class="nav-link">Блог</a></li>
-                <li><a href="contact.html" class="nav-link">Контакты</a></li>
-            </ul>
-        </div>
-        <div id="site-mobile-menu-body-signin" class="text-center">
-            <a href="#" id="signInButtonMobile" title="Войти">
-                <button class="signin-button">
-                    <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
-                </button>
-            </a>
+             <ul class="site-menu main-menu js-clone-nav d-lg-none">
+                        <li>
+                            <a href="#" id="signInButtonMobile" class="nav-link" title="Войти">
+                                <button class="signin-button">
+                                    <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+                                </button>
+                            </a>
+                        </li>
+                    </ul>
         </div>
     </div>
 
     <header class="site-navbar site-navbar-target" role="banner">
-
         <div class="container">
             <div class="row align-items-center position-relative">
 
@@ -323,8 +287,6 @@
                     <div class="site-logo">
                         <a href="index.html">Robotek Rage</a>
                     </div>
-
-
                     <div class="ml-auto toggle-button d-inline-block d-lg-none">
                         <a href="#" class="site-menu-toggle py-5 js-menu-toggle text-white">
                             <span class="icon-menu h3 text-white"></span>
@@ -338,7 +300,13 @@
                             <li><a href="about.html" class="nav-link">О нас</a></li>
                             <li><a href="blog.html" class="nav-link">Блог</a></li>
                             <li><a href="contact.html" class="nav-link">Контакты</a></li>
-
+                            <li>
+                                <a href="#" id="signInButton" class="nav-link" title="Войти">
+                                    <button class="signin-button">
+                                        <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+                                    </button>
+                                </a>
+                            </li>
                         </ul>
                     </nav>
                 </div>
@@ -613,9 +581,22 @@
 
         <div id="clickerMenu">
             <h2>RESPECT+</h2>
-            <div id="score">
+            <div id="score">0</div>
+            <div id="scoreBarContainer">
+                <div id="scoreBar"></div>
+            </div>
+            <button id="clickButton">EARN RESPECT</button>
+            <div id="missionText">MISSION: Топ игроков получат призы от Robotek Rage на Central Asia</div>
+            <div id="stats">
+                <div><span>RESPECT LEVEL</span><span class="stat-value" id="respectLevel">0</span></div>
+                <div><span>STATUS</span><span class="stat-value" id="status">ROOKIE</span></div>
+            </div>
+            <div id="notificationsContainer"></div>
         </div>
-        </div>
+
+        <button id="floatingButton" class="floating-button">
+            <i class="fas fa-gamepad text-xl"></i>
+        </button>
     </div>
 
 </div>
@@ -673,12 +654,162 @@
     const clickButton = document.getElementById('clickButton');
     const missionText = document.getElementById('missionText');
     const respectLevelDisplay = document.getElementById('respectLevel');
-    const statusDisplay = document.getElementById('status'); // Get the status display element
-    function updateScore() {
+    const statusDisplay = document.getElementById('status');
+    const notificationsContainer = document.getElementById('notificationsContainer');
+    let score = 0;
+    let showMenu = false;
+    const MAX_SCORE = 100;
+    let lastClickTime = 0;
+    const clickDelay = 200;
+    let isLoggedIn = false; // Track login status
+
+
+        // Function to update UI based on authentication state
+        function updateSignInButton(user) {
+            isLoggedIn = !!user; // Update login status
+            const buttonText = user ? `<i class="fas fa-sign-out-alt" style="color:white"></i> Выйти` : `<i class="fab fa-google" style="color:white"></i> Войти`;
+            const buttonTitle = user ? "Выйти" : "Войти";
+
+            // Update both buttons' content and title
+            const updateButtonContent = (button) => {
+                if (button) {
+                    button.innerHTML = buttonText;
+                    button.title = buttonTitle;
+                }
+            };
+
+            updateButtonContent(signInButton); // Update main button
+            updateButtonContent(signInButtonMobile); // Update mobile button
+
+             floatingButton.style.display = 'flex';
+        }
+
+    // Check current auth state
+    auth.onAuthStateChanged((user) => {
+        updateSignInButton(user);
+        if (user) {
+            loadData();
+        }
+    });
+
+
+   const signIn = (provider) => {
+      auth.signInWithPopup(provider)
+        .then((result) => {
+          // User is signed in
+          const user = result.user;
+          console.log("User signed in:", user);
+          // alert(`Welcome, ${user.displayName}!`); // Removed the alert
+          updateSignInButton(user);
+          // Load data
+          loadData();
+        })
+        .catch((error) => {
+          let errorMessage = "Sign-in failed.";
+          if (error.code === 'auth/popup-closed-by-user') {
+            errorMessage = "Sign-in popup was closed.";
+          } else if (error.code === 'auth/unauthorized-domain') {
+            errorMessage = "This domain is not authorized.  Please authorize it in the Firebase console.";
+          }
+          alert(errorMessage);
+          console.error("Sign-in error:", error);
+          alert("Sign-in failed: " + error.message);
+        });
+    };
+    const signOut = () => {
+      auth.signOut()
+        .then(() => {
+          console.log('User signed out');
+          //  alert('You have been signed out.'); // Removed the alert
+          updateSignInButton(null);
+          resetClicker();
+        })
+        .catch((error) => {
+          console.error('Sign-out error:', error);
+          let errorMessage = "Sign-out failed.";
+          alert(errorMessage);
+        });
+    };
+    const signInClickHandler = (event) => {
+      if (!checkFirebaseConfiguration()) return;
+      const isLoggedIn = !!auth.currentUser; // Проверяем, вошел ли пользователь
+      if (isLoggedIn) {
+        // Если вошел, то выходим
+        signOut();
+      } else {
+        // Если не вошел, то входим
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        signIn(provider);
+      }
+      event.preventDefault(); // Предотвращаем стандартное действие ссылки
+    };
+
+    // Add event listeners to both buttons
+    signInButton.addEventListener('click', signInClickHandler);
+    if (signInButtonMobile) {
+        signInButtonMobile.addEventListener('click', signInClickHandler);
+    }
+
+    // NEW CLICKER JS
+        function toggleClickerMenu() {
+            showMenu = !showMenu;
+            clickerMenu.classList.toggle('show');
+        }
+
+      
+        floatingButton.addEventListener('click', toggleClickerMenu);
+
+         //Function to save data to firestore
+     function saveData() {
+            if (!isLoggedIn) return;
+            db.collection("users").doc(auth.currentUser.uid).set({
+                 score: score
+            })
+         .then(() => console.log("Data saved successfully!"))
+             .catch((error) => console.error("Error saving data:", error));
+        }
+
+        function handleClick() {
+            score++;
+            updateScore();
+            saveData(); // Здесь вызываем saveData после того, как она определена
+            createNotification();
+        }
+
+    function loadData() {
+        if (!isLoggedIn) {
+             resetClicker();
+                return;
+          }
+           db.collection("users").doc(auth.currentUser.uid).get()
+                .then((doc) => {
+                   if (doc.exists) {
+                        score = doc.data().score || 0;
+                       updateScore();
+                         console.log("Data loaded successfully:", score);
+                   } else {
+                      console.log("No data found, setting to 0");
+                      resetClicker();
+                        saveData();
+                   }
+           })
+           .catch((error) => console.error("Error loading data:", error));
+    }
+     // Close click
+         // Close clicker menu on outside click
+         document.addEventListener('click', function(event) {
+            const isClickInsideMenu = clickerMenu.contains(event.target) || floatingButton.contains(event.target);
+            if (!isClickInsideMenu && clickerMenu.classList.contains('show')) {
+                 toggleClickerMenu();
+            }
+        });
+        
+          function updateScore() {
             scoreDisplay.textContent = score;
             const percentage = Math.min((score / MAX_SCORE) * 100, 100);
             scoreBar.style.width = `${percentage}%`;
-            scoreBarContainer.style.setProperty('--scorePercentage', `${percentage}%`);
+            scoreBarContainer.style.setProperty('--scorePercentage',) `${percentage}%`;
 
             const respectLevel = Math.floor(score / 10);
             respectLevelDisplay.textContent = respectLevel;
@@ -690,16 +821,10 @@
                 status = 'KINGPIN';
             }
             statusDisplay.textContent = status;
-
-            // Check if the player has enough respect to access Rage Casino
-            if (score > 2500) {
-               missionText.innerHTML = 'Поздравляем! Теперь вы можете перейти в <a href="https://google.com" style="color:#FFDA63; font-weight:bold;">Rage Casino</a>';
-               } else {
-                 missionText.textContent = "MISSION: Топ игроков получат призы от Robotek Rage на Central Asia";
-               }
         }
 
-    const createNotification = () => {
+
+        function createNotification() {
             const notification = document.createElement('div');
             notification.classList.add('notification');
             notification.textContent = '+RESPECT';
@@ -717,7 +842,8 @@
         }
 
         clickButton.addEventListener('click', addPoint);
-
+          
+      // OLD CLICKER  FUNCTION
      function resetClicker() {
             score = 0;
            updateScore();
@@ -735,53 +861,6 @@
            handleClick()
             lastClickTime = now;
         }
-    }
-
-    const signInClickHandler = async (event) => {
-        event.preventDefault(); // Stop the default action
-        if (!checkFirebaseConfiguration()) return;
-
-        if (auth.currentUser) {
-            // Sign out flow
-            try {
-                await auth.signOut();
-                console.log('User signed out');
-                updateSignInButton(null);
-                resetClicker();
-            } catch (error) {
-                console.error('Sign-out error:', error);
-                alert("Sign-out failed.");
-            }
-        } else {
-            // Sign in flow
-            const provider = new firebase.auth.GoogleAuthProvider();
-            provider.setCustomParameters({prompt: 'select_account'}); // Force account selection
-            try {
-                const result = await auth.signInWithPopup(provider);
-                // The signed-in user info.
-                const user = result.user;
-                console.log("User signed in:", user);
-                updateSignInButton(user);
-
-                // Load user data on sign-in
-                loadData();
-            } catch (error) {
-                let errorMessage = "Sign-in failed.";
-                if (error.code === 'auth/popup-closed-by-user') {
-                    errorMessage = "Sign-in popup was closed.";
-                } else if (error.code === 'auth/unauthorized-domain') {
-                    errorMessage = "This domain is not authorized.  Please authorize it in the Firebase console.";
-                }
-                alert(errorMessage);
-                console.error("Sign-in error:", error);
-            }
-        }
-    };
-
-    signInButton.addEventListener('click', signInClickHandler);
-
-    if (signInButtonMobile) {
-        signInButtonMobile.addEventListener('click', signInClickHandler);
     }
 </script>
 </body>
