@@ -667,7 +667,7 @@
         // Function to update UI based on authentication state
         function updateSignInButton(user) {
             isLoggedIn = !!user; // Update login status
-            const buttonText = user ? `<i class="fas fa-sign-out-alt" style="color:white"></i> Выйти` : `<i class="fab fa-google" style="color:white"></i> Войти`;
+            const buttonText = user ? `<i class="fas fa-sign-out-alt" style="color:white"></i>` : `<i class="fab fa-google" style="color:white"></i>`;
             const buttonTitle = user ? "Выйти" : "Войти";
 
             // Update both buttons' content and title
@@ -746,8 +746,7 @@
     };
 
     // Add event listeners to both buttons
-    signInButton.addEventListener('click', signInClickHandler);
-    if (signInButtonMobile) {
+    signInButton.addEventListener('click', signInClickHandler);    if (signInButtonMobile) {
         signInButtonMobile.addEventListener('click', signInClickHandler);
     }
 
