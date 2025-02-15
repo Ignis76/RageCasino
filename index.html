@@ -320,8 +320,7 @@
                 <div class="row align-items-center justify-content-center">
                     <div class="col-lg-7 text-center">
                         <h1 data-aos="fade-up" data-aos-delay="0">Мы команда Robotek</h1>
-                        <p data-aos="fade-up" data-aos-delay="100">Наш девиз не обосраться!</p>
-                        <p data-aos="fade-up" data-aos-delay="200"><a href="technology.html" class="btn primary-outline-white--hover">Наши уроки</a></p>
+                        <p data-aos="fade-up" data-aos-delay="200"><a href="blog.html" class="btn primary-outline-white--hover">Наши статьи</a></p>
                     </div>
                 </div>
             </div>
@@ -342,7 +341,7 @@
                         <img src="images/fon_2.jpg" alt="Image" class="img-fluid">
                         <h3>Вы можете ознакомиться с нашими CAD моделями</h3>
                         <p>В этом разделе представлены CAD модели нашего производства, а также другие рекомендованные нами CAD модели для использования.</p>
-                        <div class="more"><a href="careers.html">Перейти</a></div>
+                        <div class="more"><a href="cad.html">Перейти</a></div>
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -567,7 +566,7 @@
                             <li><a href="index.html">Main</a></li>
                             <li><a href="about.html">About</a></li>
                             <li><a href="technology.html">Сontent</a></li>
-                            <li><a href="careers.html">Cad models</a></li>
+                            <li><a href="cad.html">Cad models</a></li>
                             <li><a href="contact.html">Contact</a></li>
                         </ul>
                     </div>
@@ -613,7 +612,6 @@
 
 <script src="js/main.js"></script>
 <script>
-    // Your web app's Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyDaPh4tOyy8Q1QmYRf3WQBMwAOcyNCyGAA",
         authDomain: "robotek-rage.firebaseapp.com",
@@ -633,7 +631,6 @@
         return true;
     }
 
-    // Initialize Firebase
     let app;
     try {
         app = firebase.initializeApp(firebaseConfig);
@@ -660,14 +657,12 @@
     const MAX_SCORE = 100;
     let lastClickTime = 0;
     const clickDelay = 200;
-    let isLoggedIn = false; // Track login status
+    let isLoggedIn = false;
 
-    // Store the initial HTML of the sign-in button
     const initialSignInButtonHTML = signInButton.innerHTML;
 
-    // Function to update UI based on authentication state
     function updateSignInButton(user) {
-        isLoggedIn = !!user; // Update login status
+        isLoggedIn = !!user; 
         let buttonText = '';
         let buttonTitle = '';
 
@@ -682,14 +677,12 @@
         signInButton.innerHTML = buttonText;
         signInButton.title = buttonTitle;
 
-        // Update mobile button as well
         signInButtonMobile.innerHTML = buttonText;
         signInButtonMobile.title = buttonTitle;
 
         floatingButton.style.display = 'flex';
     }
 
-    // Check current auth state
     auth.onAuthStateChanged((user) => {
         updateSignInButton(user);
         if (user) {
@@ -700,7 +693,6 @@
     const signIn = (provider) => {
         auth.signInWithPopup(provider)
             .then((result) => {
-                // User is signed in
                 const user = result.user;
                 console.log("User signed in:", user);
                 updateSignInButton(user);
@@ -737,10 +729,8 @@
     const signInClickHandler = (event) => {
         if (!checkFirebaseConfiguration()) return;
         if (auth.currentUser) {
-            // User is signed in, sign out
             signOut();
         } else {
-            // User is not signed in, sign in
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.setCustomParameters({ prompt: 'select_account' });
             signIn(provider);
@@ -748,11 +738,9 @@
         event.preventDefault();
     };
 
-    // Add event listeners to both buttons
     signInButton.addEventListener('click', signInClickHandler);
     signInButtonMobile.addEventListener('click', signInClickHandler);
 
-    // NEW CLICKER JS
     function toggleClickerMenu() {
         showMenu = !showMenu;
         clickerMenu.classList.toggle('show');
@@ -761,7 +749,6 @@
 
     floatingButton.addEventListener('click', toggleClickerMenu);
 
-    //Function to save data to firestore
     function saveData() {
         if (!isLoggedIn) return;
         db.collection("users").doc(auth.currentUser.uid).set({
@@ -774,7 +761,7 @@
     function handleClick() {
         score++;
         updateScore();
-        saveData(); // Здесь вызываем saveData после того, как она определена
+        saveData(); 
         createNotification();
     }
 
@@ -797,8 +784,7 @@
             })
             .catch((error) => console.error("Error loading data:", error));
     }
-    // Close click
-    // Close clicker menu on outside click
+
     document.addEventListener('click', function (event) {
         const isClickInsideMenu = clickerMenu.contains(event.target) || floatingButton.contains(event.target);
         if (!isClickInsideMenu && clickerMenu.classList.contains('show')) {
@@ -844,7 +830,6 @@
 
     clickButton.addEventListener('click', addPoint);
 
-    // OLD CLICKER  FUNCTION
     function resetClicker() {
         score = 0;
         updateScore();
