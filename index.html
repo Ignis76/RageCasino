@@ -241,6 +241,21 @@
             background-color: #2B2B2B;
             width: calc(100% - var(--scorePercentage, 0%));
         }
+         /* Ensure the menu items are in a row */
+        .site-navbar .site-menu {
+            display: flex;
+            align-items: center;
+            /* Vertically align the menu items */
+        }
+
+         /* Ensure the icon and text are in a row */
+        .site-navbar .signin-button {
+            display: flex;
+            align-items: center;
+            /* Vertically align the icon and text */
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+        }
     </style>
 
 </head>
@@ -260,7 +275,7 @@
                 <li>
                     <a href="#" id="signInButtonMobile" class="nav-link" title="Войти">
                         <button class="signin-button">
-                            <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i> Войти
+                            <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
                         </button>
                     </a>
                 </li>
@@ -295,14 +310,15 @@
 
                 <div class="col-lg-4">
                     <nav class="site-navigation text-left mr-auto " role="navigation">
-                        <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
+                        <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block" style="display: flex; align-items: center; justify-content: flex-end;">
                             <li><a href="about.html" class="nav-link">О нас</a></li>
                             <li><a href="blog.html" class="nav-link">Блог</a></li>
                             <li><a href="contact.html" class="nav-link">Контакты</a></li>
                             <li>
                                 <a href="#" id="signInButton" class="nav-link" title="Войти">
                                     <button class="signin-button">
-                                        <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i> Войти
+                                        <i class="fab fa-google" style="color:white; flex-shrink: 0;"></i>
+                                        <span id="signInButtonText">Войти</span> <!-- Обёртка для текста -->
                                     </button>
                                 </a>
                             </li>
@@ -662,6 +678,8 @@
     const clickDelay = 200;
     let isLoggedIn = false; // Track login status
 
+        const signInButtonText = document.getElementById('signInButtonText');
+
     // Function to update UI based on authentication state
     function updateSignInButton(user) {
         isLoggedIn = !!user; // Update login status
@@ -673,8 +691,9 @@
             buttonText = 'Войти'; // Только текст
         }
 
-        signInButton.querySelector('.signin-button').textContent = buttonText; // Обновляем только текст кнопки
-        signInButtonMobile.querySelector('.signin-button').textContent = buttonText; // Обновляем только текст кнопки
+        signInButtonText.textContent = buttonText; // Обновляем только текст кнопки
+        // Update mobile button as well
+        signInButtonMobile.querySelector('.signin-button').textContent = buttonText;
 
         floatingButton.style.display = 'flex';
     }
@@ -737,7 +756,8 @@
         event.preventDefault();
     };
 
-    // Add event listeners to both buttons
+    // Add event listeners to both
+    buttons
     signInButton.addEventListener('click', signInClickHandler);
     signInButtonMobile.addEventListener('click', signInClickHandler);
 
