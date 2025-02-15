@@ -138,7 +138,7 @@
 
         #clickerMenu #score {
             color: white;
-            font-size: 3em;
+            font-size: 2em;
             margin-bottom: 1em;
         }
 
@@ -260,7 +260,7 @@
                 <li>
                     <a href="#" id="signInButtonMobile" class="nav-link" title="Войти">
                         <button class="signin-button">
-                            <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+                            <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i> Войти
                         </button>
                     </a>
                 </li>
@@ -302,7 +302,7 @@
                             <li>
                                 <a href="#" id="signInButton" class="nav-link" title="Войти">
                                     <button class="signin-button">
-                                        <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+                                        <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i> Войти
                                     </button>
                                 </a>
                             </li>
@@ -662,29 +662,19 @@
     const clickDelay = 200;
     let isLoggedIn = false; // Track login status
 
-    // Store the initial HTML of the sign-in button
-    const initialSignInButtonHTML = signInButton.innerHTML;
-
     // Function to update UI based on authentication state
     function updateSignInButton(user) {
         isLoggedIn = !!user; // Update login status
         let buttonText = '';
-        let buttonTitle = '';
 
         if (user) {
-            buttonText = '<i class="fas fa-sign-out-alt" style="color:white"></i> Выйти';
-            buttonTitle = 'Выйти';
+            buttonText = 'Выйти'; // Только текст
         } else {
-            buttonText = '<i class="fab fa-google" style="color:white"></i> Войти';
-            buttonTitle = 'Войти';
+            buttonText = 'Войти'; // Только текст
         }
 
-        signInButton.innerHTML = buttonText;
-        signInButton.title = buttonTitle;
-
-        // Update mobile button as well
-        signInButtonMobile.innerHTML = buttonText;
-        signInButtonMobile.title = buttonTitle;
+        signInButton.querySelector('.signin-button').textContent = buttonText; // Обновляем только текст кнопки
+        signInButtonMobile.querySelector('.signin-button').textContent = buttonText; // Обновляем только текст кнопки
 
         floatingButton.style.display = 'flex';
     }
@@ -697,7 +687,7 @@
         }
     });
 
-    const signIn = (provider) => {
+   const signIn = (provider) => {
         auth.signInWithPopup(provider)
             .then((result) => {
                 // User is signed in
@@ -719,18 +709,17 @@
             });
     };
 
-    const signOut = () => {
-        auth.signOut()
-            .then(() => {
-                console.log('User signed out');
-                updateSignInButton(null);
-                resetClicker();
-            })
-            .catch((error) => {
-                console.error('Sign-out error:', error);
-                let errorMessage = "Sign-out failed.";
-                alert(errorMessage);
-            });
+    const signOut = async () => { // Добавлено async
+        try {
+            await auth.signOut(); // Добавлено await
+            console.log('User signed out');
+            updateSignInButton(null);
+            resetClicker();
+        } catch (error) {
+            console.error('Sign-out error:', error);
+            let errorMessage = "Sign-out failed.";
+            alert(errorMessage);
+        }
     };
 
 
