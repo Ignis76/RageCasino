@@ -109,7 +109,7 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            z-index: 1000;
+            z-index: 1000; 
         }
 
         #clickerMenu {
@@ -187,7 +187,6 @@
             color: #A1A1AA;
             margin-top: 0.5em;
             font-size: 0.8em;
-            /* NEW CLICKER JS */
         }
 
         #stats {
@@ -261,7 +260,7 @@
                 <li>
                     <a href="#" id="signInButtonMobile" class="nav-link" title="Войти">
                         <button class="signin-button">
-                            <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>
+                            <i class="fab fa-google" style="color:white;  flex-shrink: 0;"></i>  Войти
                         </button>
                     </a>
                 </li>
@@ -576,7 +575,7 @@
             </div>
         </div>
     </footer>
-
+   
     <div id="gtaClicker">
 
         <div id="clickerMenu">
@@ -645,7 +644,7 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
     const signInButton = document.getElementById('signInButton');
-    const signInButtonMobile = document.getElementById('signInButtonMobile'); // Get mobile sign-in button
+    const signInButtonMobile = document.getElementById('signInButtonMobile');
     const floatingButton = document.querySelector(".floating-button");
     const clickerMenu = document.getElementById('clickerMenu');
     const scoreDisplay = document.getElementById('score');
@@ -667,7 +666,7 @@
     // Function to update UI based on authentication state
     function updateSignInButton(user) {
         isLoggedIn = !!user; // Update login status
-        const buttonText = user ? `<i class="fas fa-sign-out-alt" style="color:white"></i>` : `<i class="fab fa-google" style="color:white"></i>`;
+        const buttonText = user ? `<i class="fas fa-sign-out-alt" style="color:white"></i> Выйти` : `<i class="fab fa-google" style="color:white"></i> Войти`;
         const buttonTitle = user ? "Выйти" : "Войти";
 
         // Update both buttons' content and title
@@ -681,7 +680,7 @@
         updateButtonContent(signInButton); // Update main button
         updateButtonContent(signInButtonMobile); // Update mobile button
 
-        floatingButton.style.display = 'flex';
+            floatingButton.style.display = 'flex';
     }
 
     // Check current auth state
@@ -693,58 +692,56 @@
     });
 
 
-    const signIn = (provider) => {
-        auth.signInWithPopup(provider)
-            .then((result) => {
-                // User is signed in
-                const user = result.user;
-                console.log("User signed in:", user);
-                // alert(`Welcome, ${user.displayName}!`); // Removed the alert
-                updateSignInButton(user);
-                // Load data
-                loadData();
-            })
-            .catch((error) => {
-                let errorMessage = "Sign-in failed.";
-                if (error.code === 'auth/popup-closed-by-user') {
-                    errorMessage = "Sign-in popup was closed.";
-                } else if (error.code === 'auth/unauthorized-domain') {
-                    errorMessage = "This domain is not authorized.  Please authorize it in the Firebase console.";
-                }
-                alert(errorMessage);
-                console.error("Sign-in error:", error);
-                alert("Sign-in failed: " + error.message);
-            });
+   const signIn = (provider) => {
+      auth.signInWithPopup(provider)
+        .then((result) => {
+          // User is signed in
+          const user = result.user;
+          console.log("User signed in:", user);
+          // alert(`Welcome, ${user.displayName}!`); // Removed the alert
+          updateSignInButton(user);
+          // Load data
+          loadData();
+        })
+        .catch((error) => {
+          let errorMessage = "Sign-in failed.";
+          if (error.code === 'auth/popup-closed-by-user') {
+            errorMessage = "Sign-in popup was closed.";
+          } else if (error.code === 'auth/unauthorized-domain') {
+            errorMessage = "This domain is not authorized.  Please authorize it in the Firebase console.";
+          }
+          alert(errorMessage);
+          console.error("Sign-in error:", error);
+          alert("Sign-in failed: " + error.message);
+        });
     };
     const signOut = () => {
-        auth.signOut()
-            .then(() => {
-                console.log('User signed out');
-                //  alert('You have been signed out.'); // Removed the alert
-                updateSignInButton(null);
-                resetClicker();
-            })
-            .catch((error) => {
-                console.error('Sign-out error:', error);
-                let errorMessage = "Sign-out failed.";
-                alert(errorMessage);
-            });
+      auth.signOut()
+        .then(() => {
+          console.log('User signed out');
+          //  alert('You have been signed out.'); // Removed the alert
+          updateSignInButton(null);
+          resetClicker();
+        })
+        .catch((error) => {
+          console.error('Sign-out error:', error);
+          let errorMessage = "Sign-out failed.";
+          alert(errorMessage);
+        });
     };
     const signInClickHandler = (event) => {
-        if (!checkFirebaseConfiguration()) return;
-        const isLoggedIn = !!auth.currentUser; // Проверяем, вошел ли пользователь
-        if (isLoggedIn) {
-            // Если вошел, то выходим
-            signOut();
-        } else {
-            // Если не вошел, то входим
-            const provider = new firebase.auth.GoogleAuthProvider();
-            provider.setCustomParameters({
-                prompt: 'select_account'
-            });
-            signIn(provider);
-        }
-        event.preventDefault(); // Предотвращаем стандартное действие ссылки
+      if (!checkFirebaseConfiguration()) return;
+      const isLoggedIn = !!auth.currentUser; // Проверяем, вошел ли пользователь
+      if (isLoggedIn) {
+        // Если вошел, то выходим
+        signOut();
+      } else {
+        // Если не вошел, то входим
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        signIn(provider);
+      }
+      event.preventDefault(); // Предотвращаем стандартное действие ссылки
     };
 
     // Add event listeners to both buttons
@@ -753,23 +750,23 @@
         signInButtonMobile.addEventListener('click', signInClickHandler);
     }
 
-    // NEW     // NEW CLICKER JS
+    // NEW CLICKER JS
         function toggleClickerMenu() {
             showMenu = !showMenu;
             clickerMenu.classList.toggle('show');
         }
 
-
+      
         floatingButton.addEventListener('click', toggleClickerMenu);
 
-        //Function to save data to firestore
-        function saveData() {
+         //Function to save data to firestore
+     function saveData() {
             if (!isLoggedIn) return;
             db.collection("users").doc(auth.currentUser.uid).set({
-                score: score
+                 score: score
             })
-                .then(() => console.log("Data saved successfully!"))
-                .catch((error) => console.error("Error saving data:", error));
+         .then(() => console.log("Data saved successfully!"))
+             .catch((error) => console.error("Error saving data:", error));
         }
 
         function handleClick() {
@@ -779,39 +776,39 @@
             createNotification();
         }
 
-        function loadData() {
-            if (!isLoggedIn) {
-                resetClicker();
+    function loadData() {
+        if (!isLoggedIn) {
+             resetClicker();
                 return;
-            }
-            db.collection("users").doc(auth.currentUser.uid).get()
+          }
+           db.collection("users").doc(auth.currentUser.uid).get()
                 .then((doc) => {
-                    if (doc.exists) {
+                   if (doc.exists) {
                         score = doc.data().score || 0;
-                        updateScore();
-                        console.log("Data loaded successfully:", score);
-                    } else {
-                        console.log("No data found, setting to 0");
-                        resetClicker();
+                       updateScore();
+                         console.log("Data loaded successfully:", score);
+                   } else {
+                      console.log("No data found, setting to 0");
+                      resetClicker();
                         saveData();
-                    }
-                })
-                .catch((error) => console.error("Error loading data:", error));
-        }
-        // Close click
-        // Close clicker menu on outside click
-        document.addEventListener('click', function (event) {
+                   }
+           })
+           .catch((error) => console.error("Error loading data:", error));
+    }
+     // Close click
+         // Close clicker menu on outside click
+         document.addEventListener('click', function(event) {
             const isClickInsideMenu = clickerMenu.contains(event.target) || floatingButton.contains(event.target);
             if (!isClickInsideMenu && clickerMenu.classList.contains('show')) {
-                toggleClickerMenu();
+                 toggleClickerMenu();
             }
         });
-
-        function updateScore() {
+        
+          function updateScore() {
             scoreDisplay.textContent = score;
             const percentage = Math.min((score / MAX_SCORE) * 100, 100);
             scoreBar.style.width = `${percentage}%`;
-            scoreBarContainer.style.setProperty('--scorePercentage',) `${percentage}%`;
+            scoreBarContainer.style.setProperty('--scorePercentage', `${percentage}%`);
 
             const respectLevel = Math.floor(score / 10);
             respectLevelDisplay.textContent = respectLevel;
@@ -844,26 +841,26 @@
         }
 
         clickButton.addEventListener('click', addPoint);
-
-        // OLD CLICKER  FUNCTION
-        function resetClicker() {
+          
+      // OLD CLICKER  FUNCTION
+     function resetClicker() {
             score = 0;
-            updateScore();
+           updateScore();
             saveData();
+       }
+       
+     function addPoint() {
+      if (!isLoggedIn) {
+            alert("Пожалуйста, войдите в аккаунт, чтобы кликать!");
+            return;
         }
 
-        function addPoint() {
-            if (!isLoggedIn) {
-                alert("Пожалуйста, войдите в аккаунт, чтобы кликать!");
-                return;
-            }
-
-            const now = Date.now();
-            if (now - lastClickTime > clickDelay) {
-                handleClick()
-                lastClickTime = now;
-            }
+        const now = Date.now();
+        if (now - lastClickTime > clickDelay) {
+           handleClick()
+            lastClickTime = now;
         }
+    }
 </script>
 </body>
 </html>
