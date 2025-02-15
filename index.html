@@ -697,7 +697,7 @@
         }
     });
 
-   const signIn = (provider) => {
+    const signIn = (provider) => {
         auth.signInWithPopup(provider)
             .then((result) => {
                 // User is signed in
@@ -737,8 +737,10 @@
     const signInClickHandler = (event) => {
         if (!checkFirebaseConfiguration()) return;
         if (auth.currentUser) {
+            // User is signed in, sign out
             signOut();
         } else {
+            // User is not signed in, sign in
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.setCustomParameters({ prompt: 'select_account' });
             signIn(provider);
